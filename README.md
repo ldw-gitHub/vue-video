@@ -20,6 +20,7 @@ npm run build --report
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
+# 目录结构
 
 ├── build              // 构建服务和webpack配置
 ├── config             // 项目不同环境的配置
@@ -36,8 +37,11 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 │   ├── router    // 路由配置器
 │   └── main.js        // Webpack 预编译入口
 
-
+#页面结构
 一个.vue 文件就等于单独组件。因为.vue文件是自定义的，浏览器不识别，所以要对该文件进行解析,在webpack构建中，需要安装vue-loader 对.vue文件进行解析。
 template里面最外层必须是只有一个容器
 script 中的 export default {} 即导出这个组件，外部可以引用。
 style 中的 lang 指额外表示支持的语言可以让编辑器识别,scoped 指这里写的css只适用于该组件。
+
+# npm install 项目下载install
+# npm run build 项目部署 将生成的dist文件部署服务器
