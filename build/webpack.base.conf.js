@@ -29,6 +29,7 @@ module.exports = {
 			'vue$': 'vue/dist/vue.esm.js',
 			'@': resolve('src'),
 			'bootstrap':resolve('src/assets'),
+			'ajaxupload':resolve('src/assets/ajaxupload.js'),
 		}
 	},
 	module: {
@@ -91,10 +92,9 @@ module.exports = {
 		child_process: 'empty'
 	},
 	plugins: [
-		new webpack.optimize.CommonsChunkPlugin('common.js'),
 		new webpack.ProvidePlugin({
 			jQuery: "jquery",
-			$: "jquery"
-		})
+			$: "jquery",
+		}),
 	]
 }

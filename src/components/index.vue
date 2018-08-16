@@ -1,12 +1,12 @@
 <template>
 	<div class="container" style="width: 100%;">
-		<div class="row" style="height: 80px;">
+		<div class="row col-md-10 col-md-offset-1" style="height: 80px;">
 			<!--头部的容器 里面加上组件 menus-->
-			<menus v-bind:loginUser="loginUser"></menus>
+			<menus v-bind:username="username"></menus>
 		</div>
-		<div class="row" style="min-height: 800px;">
+		<div class="row col-md-10 col-md-offset-1" style="min-height: 800px;">
 			<!-- content -->
-			<ibody v-bind:loginUser="loginUser"></ibody>
+			<ibody v-bind:username="username"></ibody>
 		</div>
 		<div class="row">
 			<!-- 底部 -->
@@ -16,13 +16,13 @@
 </template>
 
 <script>
-	import menus from './header'; // * 导入刚才我们创建的 menus组件
-	import footers from './footer'; // * 导入刚才我们创建的 footer组件
-	import ibody from './ibody'; // * 导入刚才我们创建的 ibody组件
+	import menus from './header'; // * 导入menus组件
+	import footers from './footer'; // * 导入 footer组件
+	import ibody from './ibody'; // * 导入 ibody组件
 	export default {
 		data() {
 			return {
-				loginUser: {}
+				username: {}
 			}
 		},
 		created() {
@@ -30,7 +30,7 @@
 		},
 		methods: {
 			getRouterData() {
-				this.loginUser = this.$route.params.user;
+				this.username = this.$route.params.username;
 			}
 		},
 		components: { // * 注册menus组件，让其可以在template调用

@@ -55,12 +55,13 @@
 							'password': password
 						},
 						success: function (data) {
+							//console.log($.cookie('sessionId'));
 							data = JSON.parse(data);
 							if (data.msg == '0001') {
 								routers.push({
-									name: `index`,
+									name: 'index',
 									params: {
-										user: data.user
+										username: data.user.username
 									}
 								})
 							} else {

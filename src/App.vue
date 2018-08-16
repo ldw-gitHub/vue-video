@@ -13,6 +13,6 @@
 <style>
 	#app {
 		width: 100%;
-		min-height: 1000px;
+		min-height: 900px;
 	}
 </style>

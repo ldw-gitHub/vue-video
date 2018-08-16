@@ -7,6 +7,10 @@ import router from './router'
 import $ from 'jquery';
 import './assets/bootstrap/css/bootstrap.min.css';
 import './assets/bootstrap/js/bootstrap.min.js';
+import './assets/ajaxupload.js';
+
+import global_ from './components/global' // 导入全局变量
+Vue.prototype.GLOBAL = global_
 
 import layer from 'vue-layer'
 Vue.prototype.$layer = layer(Vue);
