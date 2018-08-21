@@ -547,9 +547,7 @@
         _getResponse : function(iframe, file){            
             // getting response
             var toDeleteFlag = false, self = this, settings = this._settings;   
-               
-            addEvent(iframe, 'load', function(){                
-                
+							 addEvent(iframe, 'load', function(){                
                 if (// For Safari 
                     iframe.src == "javascript:'%3Chtml%3E%3C/html%3E';" ||
                     // For FF, IE
@@ -567,7 +565,9 @@
                                                 
                         return;
                 }
-                
+								
+								console.log(iframe);
+								console.log(iframe.contentDocument);
                 var doc = iframe.contentDocument ? iframe.contentDocument : window.frames[iframe.id].document;
                 
                 // fixing Opera 9.26,10.00
@@ -649,6 +649,7 @@
             
             // sending request    
             var iframe = this._createIframe();
+						//var iframe = document.getElementById("imageTest")
             var form = this._createForm(iframe);
             
             // assuming following structure

@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import uploader from 'vue-simple-uploader'
 
 import $ from 'jquery';
 import './assets/bootstrap/css/bootstrap.min.css';

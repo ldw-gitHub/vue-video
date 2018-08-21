@@ -10,9 +10,9 @@
 				<div class="container">
 					<form id="uploadFileForm" name="uploadFileForm" method="post">
 						<div class="form-group row">
-							<label for="videoType" class="col-lg-2 control-label">视频类型：</label>
-							<div class="col-lg-6">
-								<select id="videoType" name="videoType" class="selectpicker" data-live-search="false">
+							<label class="col-lg-2 control-label">视频类型：</label>
+							<div class="col-lg-6" style="height:30px;">
+								<select id="videoType" name="videoType" class="selectpicker" data-style="btn-primary">
 									<option value="1">动作</option>
 									<option value="2">文艺</option>
 									<option value="3">搞笑</option>
@@ -21,22 +21,23 @@
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-lg-2 control-label" for="inputImgfile">图片：</label>
+							<label class="col-lg-2 control-label">封面图片：</label>
 							<div class="col-lg-6">
+								<input type="button" class="btn btn-default" OnClick='javascript:document.getElementById("inputImgfile").click();' value="选择图片"
+								/>
 								<input id="uploadImgPath" type="hidden" name="uploadImgPath" />
-								<input type="file" id="inputImgfile" name="imagefile" />
-								<div>
-									<img alt="" src="" class="imgs">
-								</div>
-								<div id="uploadFile" style="float:left;margin-left:10px;"></div>
+								<input type="file" id="inputImgfile" v-on:change="uploadimages" style="display: none;" name="imagefile" />
+								<div id="uploadFile" style="margin-left:20px;padding: 5px 5px;"></div>
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-lg-2 control-label" for="inputVideofile">视频：</label>
+							<label class="col-lg-2 control-label">视频：</label>
 							<div class="col-lg-6">
+								<input type="button" class="btn btn-default" OnClick='javascript:document.getElementById("inputVideofile").click();' value="选择视频"
+								/>
 								<input id="uploadVideoPath" type="hidden" name="uploadVideoPath" />
-								<input type="file" id="inputVideofile" name="videofile" />
-								<div id="uploadVideoFile" style="float:left;margin-left:10px;"></div>
+								<input type="file" id="inputVideofile" v-on:change="uploadVideos" style="display: none;" name="videofile" />
+								<div id="uploadVideoFile" style="margin-left:20px;padding: 2px 3px;"></div>
 							</div>
 						</div>
 						<div class="form-group row">
@@ -46,20 +47,21 @@
 							</div>
 						</div>
 						<div class="form-group row">
-							<label for="filename" class="col-lg-2 control-label">文件名称：</label>
+							<label for="filename" class="col-lg-2 control-label">主题名称：</label>
 							<div class="col-lg-6">
 								<input type="text" class="form-control" id="filename" name="filename" placeholder="请输入名字">
 							</div>
 						</div>
 						<div class="form-group row">
 							<div class="col-sm-offset-2 col-sm-10">
-								<button type="button" id="submitUploadFile" v-on:click="submitUploadFile" class="btn btn-default">提交</button>
+								<button type="button" id="submitUploadFile" v-on:click="submitUploadFile" class="btn btn-primary">提交</button>
 							</div>
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
+		<input style="display: none;" id="serversite" v-bind:value="server" />
 		<div class="row">
 			<!-- 底部 -->
 			<footers></footers>
@@ -87,38 +89,53 @@
 				this.username = this.$route.params.username;
 			},
 			init_upload: function () {
+				console.log("kaisi");
+				$("#deleteImgFile").on('click',function(){
+					console.log("delete");
+				})
+			},
+			uploadimages: function () {
 				var server = this.server;
 				var layer = this.$layer;
-				console.log(server);
-				new AjaxUpload("#inputImgfile", {
-					action: server + "/uploadFile",
-					name: "uploadfile",
-					onSubmit: function (file, extension) {
-						attachNameImage = file.substring(file.lastIndexOf("\\") + 1, file.length);
-						console.log(attachNameImage);
-						var re = new RegExp(".(gif|jpg|png|bmp|jpeg)$", "i");
-						if (!re.test(attachNameImage)) {
-							layer.alert("文件类型不正确,请选择图片");
-							return false;
-						} else {
-							this.setData({
-								'attachName': attachNameImage,
-								'tag': 'img'
-							});
-						}
-					},
-					onComplete: function (file, response) {
-						var k = "";
-						if (response != "") {
-							var i = response.indexOf("{");
-							var e = response.indexOf("}");
-							k = response.substring(i, e + 1);
-						}
-						var result = eval("(" + k + ")");
+
+				var fileObj = document.getElementById("inputImgfile").files[0];
+				if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+					layer.alert("请选择图片");
+					return;
+				}
+				var formFile = new FormData();
+				formFile.append("action", server + "/video/uploadFile");
+				formFile.append("uploadfile", fileObj); //加入文件对象
+
+				console.log(fileObj);
+
+				let filename = fileObj.name;
+				let attachNameImage = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
+				var re = new RegExp(".(gif|jpg|png|bmp|jpeg)$", "i");
+				console.log(attachNameImage);
+				if (!re.test(attachNameImage)) {
+					layer.alert("文件类型不正确,请选择图片");
+					return false;
+				} else {
+					formFile.append("attachName", attachNameImage);
+					formFile.append("tag", "img");
+				}
+				console.log(formFile);
+
+				$.ajax({
+					url: server + "/video/uploadFile",
+					data: formFile,
+					type: "Post",
+					dataType: "json",
+					cache: false, //上传文件无需缓存
+					processData: false, //用于对data参数进行序列化处理 这里必须false
+					contentType: false, //必须
+					success: function (result) {
 						if (result.success) {
 							$("#uploadFile").html(
-								`<span style="font-size:12px;color:#000000">${attachNameImage} 
-								<a href="javascript:void(-1);" v-on:click="deleteAttach(${img});" style="margin-left:5px;">删除</a></span>`
+								 `<span style="font-size:12px;color:#000000">${attachNameImage}
+								  <button type="button" id="deleteImgFile" v-on:click.native="deleteAttach('img')"
+								   value="删除"></button></span>`
 							);
 							$("#uploadImgPath").val(result.uploadFileName);
 						} else {
@@ -126,35 +143,47 @@
 						}
 					}
 				})
+			},
+			uploadVideos: function () {
+				var server = this.server;
+				var layer = this.$layer;
 
-				new AjaxUpload("#inputVideofile", {
-					action: server + "/uploadFile",
-					name: "uploadfile",
-					onSubmit: function (file, extension) {
-						attachName = file.substring(file.lastIndexOf("\\") + 1, file.length);
-						var re = new RegExp(".(avi|mp4|wmv|flv|rm|rmvb|asf|mov|mpg|dvr|divx|ts)$", "i");
-						if (!re.test(attachName)) {
-							layer.alert("文件类型不正确,请选择视频");
-							return false;
-						} else {
-							this.setData({
-								'attachName': attachName,
-								'tag': 'video'
-							});
-						}
-					},
-					onComplete: function (file, response) {
-						var k = "";
-						if (response != "") {
-							var i = response.indexOf("{");
-							var e = response.indexOf("}");
-							k = response.substring(i, e + 1);
-						}
-						var result = eval("(" + k + ")");
+				var fileObj = document.getElementById("inputVideofile").files[0];
+				if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+					layer.alert("请选择视频");
+					return;
+				}
+				var formFile = new FormData();
+				formFile.append("action", server + "/video/uploadFile");
+				formFile.append("uploadfile", fileObj); //加入文件对象
+
+				console.log(fileObj);
+
+				let filename = fileObj.name;
+				let attachNameImage = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
+				var re = new RegExp(".(avi|mp4|wmv|flv|rm|rmvb|asf|mov|mpg|dvr|divx|ts)$", "i");
+				if (!re.test(attachNameImage)) {
+					layer.alert("文件类型不正确,请选择视频");
+					return false;
+				} else {
+					formFile.append("attachName", attachNameImage);
+					formFile.append("tag", "video");
+				}
+				console.log(formFile);
+
+				$.ajax({
+					url: server + "/video/uploadFile",
+					data: formFile,
+					type: "Post",
+					dataType: "json",
+					cache: false, //上传文件无需缓存
+					processData: false, //用于对data参数进行序列化处理 这里必须false
+					contentType: false, //必须
+					success: function (result) {
 						if (result.success) {
 							$("#uploadVideoFile").html(
-								`<span style="font-size:12px;color:#000000">${attachName} 
-								<a href="javascript:void(-1);" v-on:click="deleteAttach(${video});" style="margin-left:5px;">删除</a></span>`
+								 `<span style="font-size:12px;color:#000000">${attachNameImage}
+													<button type="button" v-on:click="deleteAttach('video')">删除</button></span>` 
 							);
 							$("#uploadVideoPath").val(result.uploadFileName);
 						} else {
@@ -163,7 +192,41 @@
 					}
 				})
 
-				console.log(server);
+			},
+			submitUploadFile: function () {
+				var server = this.server;
+				var data = $("#uploadFileForm").serializeArray();
+				var fromData = {};
+				$.each(data, function () {
+					fromData[this.name] = this.value;
+				});
+				if (fromData.uploadImgPath == "") {
+					this.$layer.alert("图片不能为空");
+					return;
+				} else if (fromData.uploadVideoPath == "") {
+					this.$layer.alert("视频不能为空");
+					return;
+				}
+
+				var datas = JSON.parse(JSON.stringify(fromData));
+				console.log(datas);
+				var layer = this.$layer;
+				$.ajax({
+					type: "post",
+					url: server + "/video/saveMedia",
+					data: datas,
+					contentType: "application/x-www-form-urlencoded",
+					//contentType: "application/json;charset=utf-8",
+					success: function (data) {
+						if (data.success) {
+							parent.location.reload();
+							$("#description").val("");
+							$("#filename").val("");
+						} else {
+							layer.msg(data.msg);
+						}
+					}
+				})
 
 			},
 			deleteAttach: function (type) {
@@ -173,12 +236,14 @@
 				var attachName = type == "img" ? $("#uploadImgPath").val() : $("#uploadVideoPath").val();
 				var tag = type;
 				$.ajax({
-					type: 'post',
-					url: server + '/deleteFile',
+					type: "post",
+					url: server + '/video/deleteFile',
 					data: {
 						'attachName': attachName,
 						'tag': tag
 					},
+					contentType: "application/x-www-form-urlencoded",
+					//contentType: "application/json;charset=utf-8",
 					success: function (data) {
 						data = JSON.parse(data);
 						if (data.success) {
@@ -197,45 +262,6 @@
 
 				});
 
-			},
-			submitUploadFile: function () {
-				var server = this.server;
-				var data = $("#uploadFileForm").serializeArray();
-				var fromData = {};
-				$.each(data, function () {
-					fromData[this.name] = this.value;
-				});
-				console.log(fromData);
-				if (fromData.uploadImgPath == "") {
-					this.$layer.alert("图片不能为空");
-					return;
-				} else if (fromData.uploadVideoPath == "") {
-					this.$layer.alert("视频不能为空");
-					return;
-				}
-				//fromData.videoType = $("#videoType").find("option:selected").val();
-
-				var datas = JSON.parse(JSON.stringify(fromData));
-				console.log(datas);
-				var layer = this.$layer;
-				$.ajax({
-					type: "post",
-					url: server + "/saveMedia",
-					data: datas,
-					contentType: "application/x-www-form-urlencoded",
-					//contentType: "application/json;charset=utf-8",
-					success: function (data) {
-						if (data.success) {
-							parent.location.reload();
-							$("#description").val("");
-							$("#filename").val("");
-						} else {
-							layer.msg(data.msg);
-						}
-					}
-				})
-
-
 			}
 		},
 		components: { // * 注册menus组件，让其可以在template调用
@@ -243,6 +269,8 @@
 			footers
 		}
 	};
+	
+	
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -251,5 +279,16 @@
 		min-height: 800px;
 		background: rgba(255, 255, 255, 0.9);
 		z-index: 1000;
+	}
+
+	.selectpicker {
+		background: #fafdfe;
+		height: 28px;
+		width: 180px;
+		line-height: 28px;
+		border: 1px solid #9bc0dd;
+		-moz-border-radius: 2px;
+		-webkit-border-radius: 2px;
+		border-radius: 2px;
 	}
 </style>
