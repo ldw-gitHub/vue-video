@@ -5,7 +5,17 @@
 				<h4 class="panel-title">动作</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
-				<div id="actionMovie" class="col-md-12 movie_container"></div>
+				<div id="actionMovie" class="col-md-12 movie_container">
+					<div v-for="(movie,index) in actionMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" style="float:left;width:16%;height:45%;">
+						<a>
+							<img :src="ftpIP + movie.imgpath" style="cursor: pointer;BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; 
+								FILTER: progid:DXImageTransform.Microsoft.RevealTrans (duration=2,transition=23); BORDER-BOTTOM-WIDTH: 0px; 
+								BORDER-RIGHT-WIDTH: 0px;width:90%;height:70%;">
+						</a>
+						<p style="cursor: pointer;height:18;width:115px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{movie.title}}</p>
+						<p style="height:18;width:70%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" :title="movie.description">{{movie.description}}</p>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -14,7 +24,17 @@
 				<h4 class="panel-title">文艺</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
-				<div id="artMovie" class="col-md-12 movie_container"></div>
+				<div id="artMovie" class="col-md-12 movie_container">
+					<div v-for="(movie,index) in artMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" style="float:left;width:16%;height:45%;">
+						<a>
+							<img :src="ftpIP + movie.imgpath" style="cursor: pointer;BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; 
+								FILTER: progid:DXImageTransform.Microsoft.RevealTrans (duration=2,transition=23); BORDER-BOTTOM-WIDTH: 0px; 
+								BORDER-RIGHT-WIDTH: 0px;width:90%;height:70%;">
+						</a>
+						<p style="cursor: pointer;height:18;width:115px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{movie.title}}</p>
+						<p style="height:18;width:70%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" title="movie.description">{{movie.description}}</p>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -23,7 +43,17 @@
 				<h4 class="panel-title">搞笑</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
-				<div id="funnyMovie" class="col-md-12 movie_container"></div>
+				<div id="funnyMovie" class="col-md-12 movie_container">
+					<div v-for="(movie,index) in funnyMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" style="float:left;width:16%;height:45%;">
+						<a>
+							<img :src="ftpIP + movie.imgpath" style="cursor: pointer;BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; 
+								FILTER: progid:DXImageTransform.Microsoft.RevealTrans (duration=2,transition=23); BORDER-BOTTOM-WIDTH: 0px; 
+								BORDER-RIGHT-WIDTH: 0px;width:90%;height:70%;">
+						</a>
+						<p style="cursor: pointer;height:18;width:115px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{movie.title}}</p>
+						<p style="height:18;width:70%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" title="movie.description">{{movie.description}}</p>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -32,7 +62,17 @@
 				<h4 class="panel-title">惊悚</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
-				<div id="ThrillerMovie" class="col-md-12 movie_container"></div>
+				<div id="ThrillerMovie" class="col-md-12 movie_container">
+					<div v-for="(movie,index) in ThrillerMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" style="float:left;width:16%;height:45%;">
+						<a>
+							<img :src="ftpIP + movie.imgpath" style="cursor: pointer;BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; 
+								FILTER: progid:DXImageTransform.Microsoft.RevealTrans (duration=2,transition=23); BORDER-BOTTOM-WIDTH: 0px; 
+								BORDER-RIGHT-WIDTH: 0px;width:90%;height:70%;">
+						</a>
+						<p style="cursor: pointer;height:18;width:115px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{movie.title}}</p>
+						<p style="height:18;width:70%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" title="movie.description">{{movie.description}}</p>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -45,17 +85,19 @@
 			return {
 				ftpIP: this.GLOBAL.ftpIP,
 				server: this.GLOBAL.server,
+				actionMovieTmps: [],
+				artMovieTmps: {},
+				funnyMovieTmps: {},
+				ThrillerMovieTmps: {},
 			}
 		},
 		props: {
-			userid: {
+			username: {
 				type: String
 			},
 		}, //子组件显式的用 props 选项声明它期待获得的数据，这里申明 它想要一个叫做’ item‘ 的数据
 		created() {
-
-			var movieType = ["actionMovie-1", "artMovie-2", "funnyMovie-3", "ThrillerMovie-4"];
-
+			var movieType = ["actionMovieTmps-1", "artMovieTmps-2", "funnyMovieTmps-3", "ThrillerMovieTmps-4"];
 			//获取所有视频，后续加排序等。。。。
 			for (var i = 0; i < movieType.length; i++) {
 				this.getVideoInfo(movieType[i].split("-")[0], movieType[i].split("-")[1]);
@@ -65,6 +107,7 @@
 			getVideoInfo: function (target, type) {
 				var ftpIP = this.ftpIP;
 				var server = this.server;
+				var that = this;
 				$.ajax({
 					type: "post",
 					url: server + "/video/findVideosByType",
@@ -75,31 +118,15 @@
 						result = JSON.parse(result);
 						if (result.success) {
 							var tmp = result.data;
-							var info = "";
-							var length = tmp.length > 7 ? 7 : tmp.length;
-							for (var i = 0; i < length; i++) {
-								if (i == 0) {
-									info +=
-										`<div id="videos_${i}" @click="getVideos(${tmp[i].id})" style="float:left;width:35%;height:75%;">
-											         <a><img src="http://${ftpIP}/${tmp[i].imgpath}" style="cursor: pointer;BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; 
-													 FILTER: progid:DXImageTransform.Microsoft.RevealTrans (duration=2,transition=23); BORDER-BOTTOM-WIDTH: 0px; 
-													 BORDER-RIGHT-WIDTH: 0px;width:95%;height:100%;"></a>
-											         <p style="cursor: pointer;height:18;width:115px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${tmp[i].title}</p>
-											         <p style="height:18;width:70%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" 
-													 title=${tmp[i].description}>${tmp[i].description}</p></div>`;
-								} else {
-									info +=
-										`<div id="videos_${i}" @click="getVideos(${tmp[i].id})" style="float:left;width:16%;height:45%">
-													<a><img src="http://${ftpIP}/${tmp[i].imgpath}" style="cursor: pointer;BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; 
-													FILTER: progid:DXImageTransform.Microsoft.RevealTrans (duration=2,transition=23); BORDER-BOTTOM-WIDTH: 0px; 
-													BORDER-RIGHT-WIDTH: 0px;width:90%;height:70%;"></a>
-													<p style="cursor: pointer;height:18;width:115px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${tmp[i].title}</p>
-													<p style="height:18;width:115px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" 
-													title=${tmp[i].description}>${tmp[i].description}</p></div>`;
-								}
+							if (target == "actionMovieTmps") {
+								that.actionMovieTmps = tmp;
+							} else if (target == "artMovieTmps") {
+								that.artMovieTmps = tmp;
+							} else if (target == "funnyMovieTmps") {
+								that.funnyMovieTmps = tmp;
+							} else if (target == "ThrillerMovieTmps") {
+								that.ThrillerMovieTmps = tmp;
 							}
-
-							$("#" + target).html(info);
 						}
 					}
 				})
@@ -107,7 +134,13 @@
 
 			},
 			getVideos: function (videoId) {
-				console.log(videoId);
+				this.$router.push({
+					name: 'videoPlay',
+					params: {
+						username: this.username,
+						videoId: videoId,
+					}
+				})
 			}
 		},
 	}

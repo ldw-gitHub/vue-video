@@ -29,7 +29,6 @@ module.exports = {
 			'vue$': 'vue/dist/vue.esm.js',
 			'@': resolve('src'),
 			'bootstrap':resolve('src/assets'),
-			'ajaxupload':resolve('src/assets/ajaxupload.js'),
 		}
 	},
 	module: {

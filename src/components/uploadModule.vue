@@ -27,7 +27,11 @@
 								/>
 								<input id="uploadImgPath" type="hidden" name="uploadImgPath" />
 								<input type="file" id="inputImgfile" v-on:change="uploadimages" style="display: none;" name="imagefile" />
-								<div id="uploadFile" style="margin-left:20px;padding: 5px 5px;"></div>
+								<div id="uploadFile" v-show="uploadFileshow" style="margin-left:20px;padding: 5px 5px;">
+									<span style="font-size:12px;color:#000000">{{attachNameImg}}
+										<button type="button" id="deleteImgFile" v-on:click="deleteAttach('img')">删除</button>
+									</span>
+								</div>
 							</div>
 						</div>
 						<div class="form-group row">
@@ -37,7 +41,11 @@
 								/>
 								<input id="uploadVideoPath" type="hidden" name="uploadVideoPath" />
 								<input type="file" id="inputVideofile" v-on:change="uploadVideos" style="display: none;" name="videofile" />
-								<div id="uploadVideoFile" style="margin-left:20px;padding: 2px 3px;"></div>
+								<div id="uploadVideoFile" v-show="uploadVideoFileshow" style="margin-left:20px;padding: 2px 3px;">
+									<span style="font-size:12px;color:#000000">{{attachNameVideo}}
+										<button type="button" v-on:click="deleteAttach('video')">删除</button>
+									</span>
+								</div>
 							</div>
 						</div>
 						<div class="form-group row">
@@ -78,6 +86,10 @@
 				username: {},
 				ftpIP: this.GLOBAL.ftpIP,
 				server: this.GLOBAL.server,
+				uploadFileshow: false,
+				uploadVideoFileshow: false,
+				attachNameImg: "",
+				attachNameVideo: "",
 			}
 		},
 		created() {
@@ -90,7 +102,7 @@
 			},
 			init_upload: function () {
 				console.log("kaisi");
-				$("#deleteImgFile").on('click',function(){
+				$("#deleteImgFile").on('click', function () {
 					console.log("delete");
 				})
 			},
@@ -111,6 +123,7 @@
 
 				let filename = fileObj.name;
 				let attachNameImage = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
+				this.attachNameImg = attachNameImage;
 				var re = new RegExp(".(gif|jpg|png|bmp|jpeg)$", "i");
 				console.log(attachNameImage);
 				if (!re.test(attachNameImage)) {
@@ -122,6 +135,7 @@
 				}
 				console.log(formFile);
 
+				var that = this;
 				$.ajax({
 					url: server + "/video/uploadFile",
 					data: formFile,
@@ -132,17 +146,15 @@
 					contentType: false, //必须
 					success: function (result) {
 						if (result.success) {
-							$("#uploadFile").html(
-								 `<span style="font-size:12px;color:#000000">${attachNameImage}
-								  <button type="button" id="deleteImgFile" v-on:click.native="deleteAttach('img')"
-								   value="删除"></button></span>`
-							);
+							that.uploadFileshow = true;
 							$("#uploadImgPath").val(result.uploadFileName);
 						} else {
 							layer.alert("上传缩略图失败！");
 						}
 					}
 				})
+
+
 			},
 			uploadVideos: function () {
 				var server = this.server;
@@ -157,10 +169,9 @@
 				formFile.append("action", server + "/video/uploadFile");
 				formFile.append("uploadfile", fileObj); //加入文件对象
 
-				console.log(fileObj);
-
 				let filename = fileObj.name;
 				let attachNameImage = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
+				this.attachNameVideo = attachNameImage;
 				var re = new RegExp(".(avi|mp4|wmv|flv|rm|rmvb|asf|mov|mpg|dvr|divx|ts)$", "i");
 				if (!re.test(attachNameImage)) {
 					layer.alert("文件类型不正确,请选择视频");
@@ -169,8 +180,8 @@
 					formFile.append("attachName", attachNameImage);
 					formFile.append("tag", "video");
 				}
-				console.log(formFile);
 
+        var that = this;
 				$.ajax({
 					url: server + "/video/uploadFile",
 					data: formFile,
@@ -181,10 +192,7 @@
 					contentType: false, //必须
 					success: function (result) {
 						if (result.success) {
-							$("#uploadVideoFile").html(
-								 `<span style="font-size:12px;color:#000000">${attachNameImage}
-													<button type="button" v-on:click="deleteAttach('video')">删除</button></span>` 
-							);
+							that.uploadVideoFileshow = true;
 							$("#uploadVideoPath").val(result.uploadFileName);
 						} else {
 							layer.alert("上传视频失败!");
@@ -232,7 +240,6 @@
 			deleteAttach: function (type) {
 				var server = this.server;
 				var layer = this.$layer;
-				console.log(server);
 				var attachName = type == "img" ? $("#uploadImgPath").val() : $("#uploadVideoPath").val();
 				var tag = type;
 				$.ajax({
@@ -245,7 +252,6 @@
 					contentType: "application/x-www-form-urlencoded",
 					//contentType: "application/json;charset=utf-8",
 					success: function (data) {
-						data = JSON.parse(data);
 						if (data.success) {
 							if (type == "img") {
 								$("#uploadFile").empty();
@@ -269,8 +275,6 @@
 			footers
 		}
 	};
-	
-	
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -8,7 +8,6 @@ import uploader from 'vue-simple-uploader'
 import $ from 'jquery';
 import './assets/bootstrap/css/bootstrap.min.css';
 import './assets/bootstrap/js/bootstrap.min.js';
-import './assets/ajaxupload.js';
 
 import global_ from './components/global' // 导入全局变量
 Vue.prototype.GLOBAL = global_
@@ -18,10 +17,27 @@ Vue.prototype.$layer = layer(Vue);
 
 Vue.config.productionTip = false // 关闭生产模式下给出的提示
 
+router.beforeEach((to, from, next) => {
+	if(to.path == "/login"){
+		next()
+	}else if (!sessionStorage.getItem('accessToken')) {
+		next({
+			path: '/login',
+			query: {
+				redirect: to.fullPath
+			}
+		})
+	} else {
+		next()
+	}
+})
+
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
+	el: '#app',
+	router,
+	components: {
+		App
+	},
+	template: '<App/>'
 })

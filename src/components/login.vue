@@ -58,6 +58,7 @@
 							//console.log($.cookie('sessionId'));
 							data = JSON.parse(data);
 							if (data.msg == '0001') {
+								sessionStorage.setItem('accessToken', data.accessToken);
 								routers.push({
 									name: 'index',
 									params: {
