@@ -1,33 +1,45 @@
 <template>
-	<nav class="navbar navbar-default navbar-fixed-top col-md-10 col-md-offset-1">
+	<nav class="navbar navbar-default navbar-fixed-top col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-1" role="navigation">
 		<div class="container">
-			<a href="#" class="navbar-brand">
-				<strong>Shop</strong>
-			</a>
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#video-navbar-collapse">
+					<span class="sr-only">切换导航</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a href="#" class="navbar-brand">
+					<strong>VideoHome</strong>
+				</a>
+			</div>
+			<div class="collapse navbar-collapse" id="video-navbar-collapse">
+				<ul class="nav navbar-nav" id="menu_index">
+					<li v-for="(relation,index) in relations" :meta="relation" :key="index" v-bind:id="relation.id" v-bind:class="{active:index==nowIndex}"
+					    v-on:click="relationClick(index)">
+						<a>{{relation.title}}</a>
+					</li>
+					<li class="nav navbar-nav navbar-right">
+						<ul class="nav navbar-nav">
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+									{{username}}
+									<i class="glyphicon glyphicon-user"></i>
+								</a>
+								<ul class="dropdown-menu" role="menu">
+									<li>
+										<a href="#">个人信息</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a v-on:click="logout" style="cursor: pointer;">退出</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
 
-			<ul class="nav navbar-nav" id="menu_index">
-				<li v-for="(relation,index) in relations" v-bind:id="relation.id" v-bind:class="{active:index==nowIndex}" v-on:click="relationClick(index)">
-					<a>{{relation.title}}</a>
-				</li>
-			</ul>
-
-			<ul id="loginMenu" class="nav navbar-nav navbar-right email_org_name">
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-						{{username}}
-						<i class="glyphicon glyphicon-user"></i>
-					</a>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="#">个人信息</a>
-						</li>
-						<li class="divider"></li>
-						<li>
-							<a href="getLogout" id="logoutBtn">退出</a>
-						</li>
-					</ul>
-				</li>
-			</ul>
 
 		</div>
 	</nav>
@@ -42,14 +54,6 @@
 						id: 'index'
 					},
 					{
-						title: '商城',
-						id: ''
-					},
-					{
-						title: '社区',
-						id: ''
-					},
-					{
 						title: '我的资源',
 						id: ''
 					},
@@ -59,6 +63,7 @@
 					},
 				],
 				nowIndex: -1,
+				server: this.GLOBAL.server,
 			}
 		},
 		created() {
@@ -74,14 +79,30 @@
 				if (this.relations[id].id != "") {
 					this.$router.push({
 						name: this.relations[id].id,
-						params: {
-							username: this.username
-						}
 					})
 				}
 			},
 			initData: function () {
-				
+
+			},
+			logout: function () {
+				var routers = this.$router;
+				var server = this.server;
+				var sessionToken = sessionStorage.getItem('sessionToken');
+				$.ajax({
+					type: 'post',
+					url: server + '/video/logout',
+					data: {
+						'sessionToken': sessionToken,
+					},
+					success: function (data) {
+						sessionStorage.removeItem('sessionToken');
+						routers.push({
+							name: "login",
+						})
+					}
+
+				});
 			}
 		},
 	}
@@ -91,5 +112,6 @@
 <style scoped>
 	#menu_index {
 		cursor: pointer;
+		width: 80%;
 	}
 </style>

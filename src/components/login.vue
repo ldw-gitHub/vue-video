@@ -2,15 +2,15 @@
 	<div id="login_info">
 		<div class="container">
 			<div class="row">
-				<label class='col-md-3'>username</label>
-				<div class="col-md-6">
+				<label class='col-md-2 col-md-offset-3' style="padding-right: 0;">username</label>
+				<div class="col-xs-8 col-xs-offset-2 col-md-2 col-md-offset-0" style="padding-left: 0;">
 					<input type="text" id="username" name="username" class="form-control">
 					<br>
 				</div>
 			</div>
 			<div class="row">
-				<label class='col-md-3'>password</label>
-				<div class="col-md-6">
+				<label class='col-md-2 col-md-offset-3' style="padding-right: 0;">password</label>
+				<div class="col-xs-8 col-xs-offset-2 col-md-2 col-md-offset-0" style="padding-left: 0;">
 					<input type="password" id="password" name="password" class="form-control">
 					<br>
 				</div>
@@ -31,7 +31,9 @@
 	export default {
 		name: 'login',
 		data() {
-			return {}
+			return {
+				server: this.GLOBAL.server,
+			}
 		},
 		methods: {
 			doRegist: function () {
@@ -41,6 +43,7 @@
 				var routers = this.$router;
 				var username = $("#username").val();
 				var password = $("#password").val();
+				var server = this.server;
 
 				if (username == "" || username == null) {
 					this.$layer.msg("用户名为空");
@@ -49,16 +52,17 @@
 				} else {
 					$.ajax({
 						type: 'post',
-						url: 'http://localhost:8081/video/login',
+						url: server + '/video/login',
 						data: {
 							'username': username,
-							'password': password
+							'password': password,
+							'remenberme':0,
 						},
 						success: function (data) {
 							//console.log($.cookie('sessionId'));
 							data = JSON.parse(data);
 							if (data.msg == '0001') {
-								sessionStorage.setItem('accessToken', data.accessToken);
+								sessionStorage.setItem('sessionToken', data.accessToken);
 								routers.push({
 									name: 'index',
 									params: {
@@ -82,8 +86,8 @@
 <style scoped>
 	#login_info{
 		width: 100%;
-		height: 1000px;
-		background-image: url(../assets/img/timg.jpg);
+		height: 943px;
+		background-image: url(../assets/img/girl.jpg);
 		background-size: cover;
 		text-align: center;
 	}
@@ -96,7 +100,7 @@
 		right: 0;
 		margin: auto;
 		height: 240px;
-		width: 30%;
+		width: 100%;
 		font-size: 15px;
 		font-family: serif;
 		font-variant: inherit;
