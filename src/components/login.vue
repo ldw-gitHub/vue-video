@@ -16,7 +16,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<button type="button" class="btn btn-default" @click="login">login</button>
+				<button type="button" id="loginbut" class="btn btn-default" @click="login">login</button>
 				<button type="button" class="btn btn-default" v-on:click="doRegist">regist</button>
 			</div>
 		</div>
@@ -44,6 +44,10 @@
 				var username = $("#username").val();
 				var password = $("#password").val();
 				var server = this.server;
+				var layer = this.$layer;
+				
+				// 禁用按钮防止重复提交
+                $("#loginbut").attr({ disabled: "disabled" });
 
 				if (username == "" || username == null) {
 					this.$layer.msg("用户名为空");
@@ -60,6 +64,7 @@
 						},
 						success: function (data) {
 							//console.log($.cookie('sessionId'));
+							$("#loginbut").removeAttr("disabled");
 							data = JSON.parse(data);
 							if (data.msg == '0001') {
 								sessionStorage.setItem('sessionToken', data.accessToken);
@@ -70,7 +75,7 @@
 									}
 								})
 							} else {
-								this.$layer.alert(data.msg);
+								layer.msg(data.msg);
 							}
 						}
 
