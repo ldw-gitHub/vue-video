@@ -2,18 +2,18 @@
 	<div class="containerBody">
 		<div class="panel panel-info moviepanel">
 			<div class="panel-heading">
-				<h4 class="panel-title">动作</h4>
+				<h4 class="panel-title glyphicon glyphicon-flash">
+					<span> 动作</span>
+				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
 				<div id="actionMovie" class="col-md-12 movie_container">
-					<div v-for="(movie,index) in actionMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" style="float:left;width:16%;height:45%;">
+					<div v-for="(movie,index) in actionMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" class="col-md-2 col-xs-12 moviesClass">
 						<a>
-							<img :src="ftpIP + movie.imgpath" style="cursor: pointer;BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; 
-								FILTER: progid:DXImageTransform.Microsoft.RevealTrans (duration=2,transition=23); BORDER-BOTTOM-WIDTH: 0px; 
-								BORDER-RIGHT-WIDTH: 0px;width:90%;height:70%;">
+							<img :src="ftpIP + movie.imgpath" class="imgClass">
 						</a>
-						<p style="cursor: pointer;height:18;width:115px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{movie.title}}</p>
-						<p style="height:18;width:70%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" :title="movie.description">{{movie.description}}</p>
+						<p class="titleClass">{{movie.title}}</p>
+						<p class="discriptionClass" :title="movie.description">{{movie.description}}</p>
 					</div>
 				</div>
 			</div>
@@ -25,14 +25,12 @@
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
 				<div id="artMovie" class="col-md-12 movie_container">
-					<div v-for="(movie,index) in artMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" style="float:left;width:16%;height:45%;">
+					<div v-for="(movie,index) in artMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" class="col-md-2 col-xs-12 moviesClass">
 						<a>
-							<img :src="ftpIP + movie.imgpath" style="cursor: pointer;BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; 
-								FILTER: progid:DXImageTransform.Microsoft.RevealTrans (duration=2,transition=23); BORDER-BOTTOM-WIDTH: 0px; 
-								BORDER-RIGHT-WIDTH: 0px;width:90%;height:70%;">
+							<img :src="ftpIP + movie.imgpath" class="imgClass">
 						</a>
-						<p style="cursor: pointer;height:18;width:115px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{movie.title}}</p>
-						<p style="height:18;width:70%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" title="movie.description">{{movie.description}}</p>
+						<p class="titleClass">{{movie.title}}</p>
+						<p class="discriptionClass" :title="movie.description">{{movie.description}}</p>
 					</div>
 				</div>
 			</div>
@@ -44,14 +42,12 @@
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
 				<div id="funnyMovie" class="col-md-12 movie_container">
-					<div v-for="(movie,index) in funnyMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" style="float:left;width:16%;height:45%;">
+					<div v-for="(movie,index) in funnyMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" class="col-md-2 col-xs-12 moviesClass">
 						<a>
-							<img :src="ftpIP + movie.imgpath" style="cursor: pointer;BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; 
-								FILTER: progid:DXImageTransform.Microsoft.RevealTrans (duration=2,transition=23); BORDER-BOTTOM-WIDTH: 0px; 
-								BORDER-RIGHT-WIDTH: 0px;width:90%;height:70%;">
+							<img :src="ftpIP + movie.imgpath" class="imgClass">
 						</a>
-						<p style="cursor: pointer;height:18;width:115px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{movie.title}}</p>
-						<p style="height:18;width:70%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" title="movie.description">{{movie.description}}</p>
+						<p class="titleClass">{{movie.title}}</p>
+						<p class="discriptionClass" :title="movie.description">{{movie.description}}</p>
 					</div>
 				</div>
 			</div>
@@ -63,14 +59,12 @@
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
 				<div id="ThrillerMovie" class="col-md-12 movie_container">
-					<div v-for="(movie,index) in ThrillerMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" style="float:left;width:16%;height:45%;">
+					<div v-for="(movie,index) in ThrillerMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" class="col-md-2 col-xs-12 moviesClass">
 						<a>
-							<img :src="ftpIP + movie.imgpath" style="cursor: pointer;BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; 
-								FILTER: progid:DXImageTransform.Microsoft.RevealTrans (duration=2,transition=23); BORDER-BOTTOM-WIDTH: 0px; 
-								BORDER-RIGHT-WIDTH: 0px;width:90%;height:70%;">
+							<img :src="ftpIP + movie.imgpath" class="imgClass">
 						</a>
-						<p style="cursor: pointer;height:18;width:115px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{movie.title}}</p>
-						<p style="height:18;width:70%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" title="movie.description">{{movie.description}}</p>
+						<p class="titleClass">{{movie.title}}</p>
+						<p class="discriptionClass" :title="movie.description">{{movie.description}}</p>
 					</div>
 				</div>
 			</div>
@@ -158,12 +152,51 @@
 	}
 
 	.movie_container {
-		height: 345px;
+		min-height: 350px;
+		margin-top: 5px;
 	}
 
 	.moviepanel {
-		height: 365px;
-		width: 96%;
-		margin-left: 2%;
+		min-height: 370px;
+		width: 100%;
+	}
+
+	.imgClass {
+		cursor: pointer;
+		BORDER-TOP-WIDTH: 0px;
+		BORDER-LEFT-WIDTH: 0px;
+		FILTER: progid:DXImageTransform.Microsoft.RevealTrans (duration=2, transition=23);
+		BORDER-BOTTOM-WIDTH: 0px;
+		BORDER-RIGHT-WIDTH: 0px;
+		width: 100%;
+		height: 72%;
+	}
+
+	.titleClass {
+		cursor: pointer;
+		height: 18px;
+		width: 95%;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		line-height: 18px;
+		text-align: left;
+		margin-top: 5px;
+	}
+
+	.discriptionClass {
+		height: 18px;
+		width: 95%;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		line-height: 18px;
+		text-align: left;
+	}
+
+	.moviesClass {
+		float: left;
+		height: 170px;
+		margin-top: 10px;
 	}
 </style>

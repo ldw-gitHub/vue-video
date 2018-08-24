@@ -7,6 +7,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
 				</button>
 				<a href="#" class="navbar-brand">
 					<strong>VideoHome</strong>
@@ -18,7 +19,7 @@
 					    v-on:click="relationClick(index)">
 						<a>{{relation.title}}</a>
 					</li>
-					<li class="nav navbar-nav navbar-right">
+					<li class="nav navbar-nav navbar-right" style="margin-left:15px;">
 						<ul class="nav navbar-nav">
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -89,6 +90,14 @@
 				var routers = this.$router;
 				var server = this.server;
 				var sessionToken = sessionStorage.getItem('sessionToken');
+				if(sessionToken == null || sessionToken == ""){
+					sessionToken = localStorage.getItem('sessionToken');
+				}
+				if(sessionToken == null || sessionToken == ""){
+					routers.push({
+						name: "login",
+					})
+				}
 				$.ajax({
 					type: 'post',
 					url: server + '/video/logout',
@@ -97,6 +106,7 @@
 					},
 					success: function (data) {
 						sessionStorage.removeItem('sessionToken');
+						localStorage.removeItem("sessionToken");
 						routers.push({
 							name: "login",
 						})

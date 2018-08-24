@@ -23,8 +23,8 @@
 						<div class="form-group row">
 							<label class="col-lg-2 control-label">封面图片：</label>
 							<div class="col-lg-6">
-								<input type="button" class="btn btn-default" OnClick='javascript:document.getElementById("inputImgfile").click();' value="选择图片"
-								/>
+								<input type="button" id="chooceImg" class="btn btn-default" OnClick='javascript:document.getElementById("inputImgfile").click();'
+								    value="选择图片" />
 								<input id="uploadImgPath" type="hidden" name="uploadImgPath" />
 								<input type="file" id="inputImgfile" v-on:change="uploadimages" style="display: none;" name="imagefile" />
 								<div id="uploadFile" v-show="uploadFileshow" style="margin-left:20px;padding: 5px 5px;">
@@ -32,13 +32,19 @@
 										<button type="button" id="deleteImgFile" v-on:click="deleteAttach('img')">删除</button>
 									</span>
 								</div>
+
+								<div class="progress" id="image-progress" style="margin-top: 10px;display: none;">
+									<div class="progress-bar" id="image-progress-width" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+									    style="width: 0%;"></div>
+								</div>
+
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-lg-2 control-label">视频：</label>
 							<div class="col-lg-6">
-								<input type="button" class="btn btn-default" OnClick='javascript:document.getElementById("inputVideofile").click();' value="选择视频"
-								/>
+								<input type="button" id="chooceVideo" class="btn btn-default" OnClick='javascript:document.getElementById("inputVideofile").click();'
+								    value="选择视频" />
 								<input id="uploadVideoPath" type="hidden" name="uploadVideoPath" />
 								<input type="file" id="inputVideofile" v-on:change="uploadVideos" style="display: none;" name="videofile" />
 								<div id="uploadVideoFile" v-show="uploadVideoFileshow" style="margin-left:20px;padding: 2px 3px;">
@@ -46,18 +52,24 @@
 										<button type="button" v-on:click="deleteAttach('video')">删除</button>
 									</span>
 								</div>
+
+								<div class="progress" id="video-progress" style="margin-top: 10px;display: none;">
+									<div class="progress-bar" id="video-progress-width" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+									    style="width: 0%;"></div>
+								</div>
+
 							</div>
 						</div>
 						<div class="form-group row">
 							<label for="description" class="col-lg-2 control-label">内容说明：</label>
 							<div class="col-lg-6">
-								<textarea type="text" class="form-control" id="description" name="description" placeholder="介绍..."></textarea>
+								<textarea type="text" class="form-control" id="description" name="description" placeholder="介绍...不超过100"></textarea>
 							</div>
 						</div>
 						<div class="form-group row">
 							<label for="filename" class="col-lg-2 control-label">主题名称：</label>
 							<div class="col-lg-6">
-								<input type="text" class="form-control" id="filename" name="filename" placeholder="请输入名字">
+								<input type="text" class="form-control" id="filename" name="filename" placeholder="请输入主题名称...不超过50">
 							</div>
 						</div>
 						<div class="form-group row">
@@ -80,6 +92,7 @@
 <script>
 	import menus from './header'; // * 导入 menus组件
 	import footers from './footer'; // * 导入 footer组件
+
 	export default {
 		data() {
 			return {
@@ -136,21 +149,57 @@
 				console.log(formFile);
 
 				var that = this;
+				$("#chooceImg").attr({
+					disabled: "disabled"
+				})
+				$("#chooceImg").val("正在上传图片...");
 				$.ajax({
-					url: server + "/video/uploadFile",
+					url: server + "/zuul/video/uploadFile",
 					data: formFile,
 					type: "Post",
 					dataType: "json",
 					cache: false, //上传文件无需缓存
 					processData: false, //用于对data参数进行序列化处理 这里必须false
 					contentType: false, //必须
+					Accept: "text/html;charset=UTF-8",
+					xhr: function () {
+						var myXhr = new window.XMLHttpRequest();
+						myXhr.upload.addEventListener('progress', function (e) {
+							console.log("in Upload progress");
+						}, false); // for handling the progress of the upload
+						myXhr.addEventListener("progress", function (e) {
+							console.log("in Download progress");
+							if (e.lengthComputable) {
+								var percentComplete = Math.round((e.loaded / e.total) * 100);
+								$("#image-progress-width").css("width", percentComplete + '%');
+							} else {
+								console.log("Length not computable.");
+							}
+						}, false);
+						return myXhr;
+					},
+					beforeSend: function () {
+						$("#image-progress").show();
+					},
+					complete: function () {
+						$("#image-progress").hide();
+					},
 					success: function (result) {
+						$("#image-progress").hide();
+						$("#chooceImg").removeAttr("disabled");
+						$("#chooceImg").val("选择图片");
 						if (result.success) {
 							that.uploadFileshow = true;
 							$("#uploadImgPath").val(result.uploadFileName);
 						} else {
 							layer.alert("上传缩略图失败！");
 						}
+					},
+					error: function () {
+						$("#image-progress").hide();
+						$("#chooceImg").removeAttr("disabled");
+						$("#chooceImg").val("选择图片");
+						layer.alert("上传缩略图失败！");
 					}
 				})
 
@@ -172,7 +221,7 @@
 				let filename = fileObj.name;
 				let attachNameImage = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
 				this.attachNameVideo = attachNameImage;
-				var re = new RegExp(".(avi|mp4|wmv|flv|rm|rmvb|asf|mov|mpg|dvr|divx|ts)$", "i");
+				var re = new RegExp(".(avi|mp4|wmv|flv|rm|rmvb|asf|mov|mpg|dvr|divx|ts|mkv)$", "i");
 				if (!re.test(attachNameImage)) {
 					layer.alert("文件类型不正确,请选择视频");
 					return false;
@@ -181,22 +230,59 @@
 					formFile.append("tag", "video");
 				}
 
-        var that = this;
+				var that = this;
+				$("#chooceVideo").attr({
+					disabled: "disabled"
+				})
+				$("#chooceVideo").val("正在上传视频...");
+
+				//this.$options.methods.getProgress();调用方法
+
 				$.ajax({
-					url: server + "/video/uploadFile",
+					url: server + "/zuul/video/uploadFile",
 					data: formFile,
 					type: "Post",
 					dataType: "json",
 					cache: false, //上传文件无需缓存
 					processData: false, //用于对data参数进行序列化处理 这里必须false
 					contentType: false, //必须
+					xhr: function () {
+						var myXhr = $.ajaxSettings.xhr();
+						if (myXhr.upload) {
+							myXhr.upload.addEventListener("progress", function (e) {
+								console.log("in Download progress");
+								if (e.lengthComputable) {
+									var percentComplete = Math.round((e.loaded / e.total) * 100);
+									console.log(percentComplete);
+									$("#image-progress-width").css("width", percentComplete + '%');
+								} else {
+									console.log("Length not computable.");
+								}
+							}, false);
+						}
+						return myXhr;
+					},
+					beforeSend: function () {
+						$("#video-progress").show();
+					},
+					complete: function () {
+						$("#video-progress").hide();
+					},
 					success: function (result) {
+						$("#chooceVideo").removeAttr("disabled");
+						$("#chooceVideo").val("选择视频");
 						if (result.success) {
 							that.uploadVideoFileshow = true;
 							$("#uploadVideoPath").val(result.uploadFileName);
 						} else {
 							layer.alert("上传视频失败!");
 						}
+					},
+					error: function () {
+						$("#video-progress").hide();
+						$("#chooceVideo").removeAttr("disabled");
+						$("#chooceVideo").val("选择视频");
+						layer.alert("上传视频失败!");
 					}
 				})
 
@@ -213,6 +299,12 @@
 					return;
 				} else if (fromData.uploadVideoPath == "") {
 					this.$layer.alert("视频不能为空");
+					return;
+				} else if (fromData.description == "") {
+					this.$layer.alert("内容说明过长");
+					return;
+				} else if (fromData.filename == "") {
+					this.$layer.alert("主题名称太长");
 					return;
 				}
 
@@ -233,7 +325,7 @@
 						} else {
 							layer.msg(data.msg);
 						}
-					}
+					},
 				})
 
 			},
@@ -268,6 +360,9 @@
 
 				});
 
+			},
+			getProgress: function () {
+				console.log(111);
 			}
 		},
 		components: { // * 注册menus组件，让其可以在template调用
