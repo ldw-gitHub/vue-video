@@ -20,11 +20,11 @@ export default new Router({  // 创建 router 实例，然后传 `routes` 配置
       component: login //访问的组件,即访问‘/’,它会加载 index 组件所有的内容
     },
 		{
-			path:'/index/:username',
+			path:'/index',
 			name:'index',
 			component:index
 		},{
-			path:'/uploadModule/:username',
+			path:'/uploadModule',
 			name:'upload',
 			component:upload
 		},{

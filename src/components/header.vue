@@ -19,7 +19,7 @@
 					    v-on:click="relationClick(index)">
 						<a>{{relation.title}}</a>
 					</li>
-					<li class="nav navbar-nav navbar-right" style="margin-left:15px;">
+					<li v-if="username != '' && username != null" class="nav navbar-nav navbar-right" style="margin-left:15px;">
 						<ul class="nav navbar-nav">
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -35,6 +35,18 @@
 										<a v-on:click="logout" style="cursor: pointer;">退出</a>
 									</li>
 								</ul>
+							</li>
+						</ul>
+					</li>
+					<li v-else class="nav navbar-nav navbar-right" style="margin-left:15px;">
+						<ul class="nav navbar-nav navbar-right">
+							<li>
+								<a href="#" v-on:click="register">
+									<span class="glyphicon glyphicon-user"></span> 注册</a>
+							</li>
+							<li>
+								<a href="#" v-on:click="changeTologin">
+									<span class="glyphicon glyphicon-log-in"></span> 登录</a>
 							</li>
 						</ul>
 					</li>
@@ -65,35 +77,43 @@
 				],
 				nowIndex: -1,
 				server: this.GLOBAL.server,
+				username: "",
 			}
 		},
 		created() {
 			this.initData();
 		},
-		props: {
+		/* props: {
 			username: {
 				type: String
 			},
-		}, //子组件显式的用 props 选项声明它期待获得的数据，这里申明 它想要一个叫做’ item‘ 的数据,
+		}, */ //子组件显式的用 props 选项声明它期待获得的数据，这里申明 它想要一个叫做’ item‘ 的数据,
 		methods: {
 			relationClick(id) {
 				if (this.relations[id].id != "") {
-					this.$router.push({
-						name: this.relations[id].id,
-					})
+					//限制需要登入的模块
+					if (this.relations[id].id == 'upload' &&
+						(this.username == '' || this.username == null)) {
+						this.$layer.msg("需要登入访问");
+					} else {
+						this.$router.push({
+							name: this.relations[id].id,
+						})
+					}
 				}
 			},
 			initData: function () {
-
+				this.username = sessionStorage.getItem('username') ? sessionStorage.getItem('username') : localStorage.getItem(
+					'username');
 			},
 			logout: function () {
 				var routers = this.$router;
 				var server = this.server;
 				var sessionToken = sessionStorage.getItem('sessionToken');
-				if(sessionToken == null || sessionToken == ""){
+				if (sessionToken == null || sessionToken == "") {
 					sessionToken = localStorage.getItem('sessionToken');
 				}
-				if(sessionToken == null || sessionToken == ""){
+				if (sessionToken == null || sessionToken == "") {
 					routers.push({
 						name: "login",
 					})
@@ -107,12 +127,22 @@
 					success: function (data) {
 						sessionStorage.removeItem('sessionToken');
 						localStorage.removeItem("sessionToken");
+						sessionStorage.removeItem('username');
+						localStorage.removeItem("username");
 						routers.push({
 							name: "login",
 						})
 					}
 
 				});
+			},
+			register: function () {
+				this.$layer.msg("暂不提供注册!");
+			},
+			changeTologin: function () {
+				this.$router.push({
+					name: 'login',
+				})
 			}
 		},
 	}

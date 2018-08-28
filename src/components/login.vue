@@ -42,6 +42,13 @@
 			},
 			login: function () {
 				var routers = this.$router;
+				
+				if((sessionStorage.getItem('sessionToken') || localStorage.getItem('sessionToken'))
+				    &&(sessionStorage.getItem('username') || localStorage.getItem('username'))){
+					routers.push({
+						name: 'index',
+					})
+				}
 				var username = $("#username").val();
 				var password = $("#password").val();
 				var remFlag = $("#remember").is(":checked");
@@ -75,14 +82,13 @@
 								//记住密码
 								if (remFlag) {
 									localStorage.setItem("sessionToken", data.accessToken);
+									localStorage.setItem("username", data.user.username);
 								} else {
 									sessionStorage.setItem('sessionToken', data.accessToken);
+									localStorage.setItem("username", data.user.username);
 								}
 								routers.push({
 									name: 'index',
-									params: {
-										username: data.user.username
-									}
 								})
 							} else {
 								layer.msg(data.msg);

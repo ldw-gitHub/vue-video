@@ -111,7 +111,8 @@
 		},
 		methods: {
 			getRouterData() {
-				this.username = this.$route.params.username;
+				this.username = sessionStorage.getItem('username') ? sessionStorage.getItem('username') : localStorage.getItem(
+					'username');
 			},
 			init_upload: function () {
 				console.log("kaisi");

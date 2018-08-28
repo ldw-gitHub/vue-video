@@ -18,13 +18,20 @@ Vue.prototype.$layer = layer(Vue);
 Vue.config.productionTip = false // 关闭生产模式下给出的提示
 
 router.beforeEach((to, from, next) => {
-	if(to.path == "/login"){
+	if(to.path == "/"){
+		next({
+			path: '/index',
+			query: {
+				redirect: to.fullPath
+			}
+		})
+	}else if(to.path == "/login" || to.path == "/index"){
 		next()
 	}else if (!sessionStorage.getItem('sessionToken') && !localStorage.getItem('sessionToken')) {
 		next({
 			path: '/login',
 			query: {
-				redirect: to.fullPath
+				redirect: to.fullPath 
 			}
 		})
 	} else {
