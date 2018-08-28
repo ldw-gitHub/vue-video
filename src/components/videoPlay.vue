@@ -10,7 +10,7 @@
 				<div class="panel-heading">
 					<h4 class="panel-title">{{videoModel.title}}</h4>
 				</div>
-				<div id="pictruePath" class="panel-body" style="padding-top: 5px;">
+				<div id="pictruePath" class="panel-body">
 					<video-player class="video-player vjs-custom-skin" ref="videoPlayer" :playsinline="true" :options="playerOptions"></video-player>
 				</div>
 			</div>

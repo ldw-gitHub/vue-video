@@ -129,7 +129,7 @@
 					return;
 				}
 				var formFile = new FormData();
-				formFile.append("action", server + "/video/uploadFile");
+				formFile.append("action", server + "/zuul/video/uploadFile");
 				formFile.append("uploadfile", fileObj); //加入文件对象
 
 				console.log(fileObj);
@@ -208,15 +208,8 @@
 			uploadVideos: function () {
 				var server = this.server;
 				var layer = this.$layer;
-
 				var fileObj = document.getElementById("inputVideofile").files[0];
-				if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
-					layer.alert("请选择视频");
-					return;
-				}
-				var formFile = new FormData();
-				formFile.append("action", server + "/video/uploadFile");
-				formFile.append("uploadfile", fileObj); //加入文件对象
+				console.log(fileObj);
 
 				let filename = fileObj.name;
 				let attachNameImage = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
@@ -225,19 +218,45 @@
 				if (!re.test(attachNameImage)) {
 					layer.alert("文件类型不正确,请选择视频");
 					return false;
-				} else {
-					formFile.append("attachName", attachNameImage);
-					formFile.append("tag", "video");
+				}
+				if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+					layer.alert("请选择视频");
+					return;
 				}
 
-				var that = this;
+				var formFile = new FormData();
+				formFile.append("attachName", attachNameImage);
+				formFile.append("tag", "video");
 				$("#chooceVideo").attr({
 					disabled: "disabled"
 				})
 				$("#chooceVideo").val("正在上传视频...");
 
-				//this.$options.methods.getProgress();调用方法
+				//将文件切片
+				var filesize = fileObj.size;
+				var setsize = 1024 * 1024 * 5; //10M
+				//var filecount = Math.ceil(filesize / setsize);
 
+				var fileArray = this.$options.methods.cutFile(fileObj, setsize);
+				console.log(fileArray);
+				$("#video-progress").show(); //显示进度条
+				formFile.append("uploadfile", fileArray[0].file); //加入文件对象
+				formFile.append("count", 0);
+				formFile.append("name", fileArray[0].name);
+
+				console.log(formFile);
+				var lengthArray = fileArray.length;
+				if (lengthArray == 1) {
+					formFile.append("isLast", "true");
+				} else {
+					formFile.append("isLast", "false");
+				}
+				formFile.append("total", lengthArray);
+				this.$options.methods.ajaxUploadLargeFile(1, formFile, lengthArray, server, layer, this, fileArray);
+			},
+			ajaxUploadLargeFile: function (count, formFile, totle, server, layer, that, fileArray) {
+				console.log(count);
+				var percentComplete = Math.round((count * 100) / totle);
 				$.ajax({
 					url: server + "/zuul/video/uploadFile",
 					data: formFile,
@@ -246,36 +265,37 @@
 					cache: false, //上传文件无需缓存
 					processData: false, //用于对data参数进行序列化处理 这里必须false
 					contentType: false, //必须
-					xhr: function () {
-						var myXhr = $.ajaxSettings.xhr();
-						if (myXhr.upload) {
-							myXhr.upload.addEventListener("progress", function (e) {
-								console.log("in Download progress");
-								if (e.lengthComputable) {
-									var percentComplete = Math.round((e.loaded / e.total) * 100);
-									console.log(percentComplete);
-									$("#image-progress-width").css("width", percentComplete + '%');
-								} else {
-									console.log("Length not computable.");
-								}
-							}, false);
-						}
-						return myXhr;
-					},
+					//context: document.body, //this指向该DOM
 					beforeSend: function () {
-						$("#video-progress").show();
+						//$("#video-progress").show();
 					},
 					complete: function () {
-						$("#video-progress").hide();
+						$("#video-progress-width").css("width", percentComplete + '%');
+						if (count == totle) { //最后一个文件
+							$("#video-progress").hide();
+							$("#chooceVideo").removeAttr("disabled");
+							$("#chooceVideo").val("选择视频");
+						}
 					},
 					success: function (result) {
-						$("#chooceVideo").removeAttr("disabled");
-						$("#chooceVideo").val("选择视频");
-						if (result.success) {
-							that.uploadVideoFileshow = true;
-							$("#uploadVideoPath").val(result.uploadFileName);
+						if (count == totle) {
+							$("#video-progress-width").css("width", 0 + '%');
+							if (result.success) {
+								that.uploadVideoFileshow = true;
+								$("#uploadVideoPath").val(result.uploadFileName);
+							} else {
+								layer.alert(result.error);
+							}
 						} else {
-							layer.alert("上传视频失败!");
+							formFile.set("uploadfile", fileArray[count].file);
+							formFile.set("count", count);
+							formFile.set("name", fileArray[count].name);
+							if (count == totle - 1) {
+								formFile.set("isLast", "true");
+							} else {
+								formFile.set("isLast", "false");
+							}
+							that.$options.methods.ajaxUploadLargeFile(++count, formFile, totle, server, layer, that, fileArray);
 						}
 					},
 					error: function () {
@@ -283,9 +303,9 @@
 						$("#chooceVideo").removeAttr("disabled");
 						$("#chooceVideo").val("选择视频");
 						layer.alert("上传视频失败!");
+						return false;
 					}
 				})
-
 			},
 			submitUploadFile: function () {
 				var server = this.server;
@@ -328,6 +348,21 @@
 					},
 				})
 
+			},
+			cutFile: function (file, cutSize) {
+				var count = file.size / cutSize | 0,
+					fileArr = [];
+				for (var i = 0; i < count; i++) {
+					fileArr.push({
+						name: file.name + ".part" + (i + 1),
+						file: file.slice(cutSize * i, cutSize * (i + 1))
+					});
+				};
+				fileArr.push({
+					name: file.name + ".part" + (count + 1),
+					file: file.slice(cutSize * count, file.size)
+				});
+				return fileArr;
 			},
 			deleteAttach: function (type) {
 				var server = this.server;

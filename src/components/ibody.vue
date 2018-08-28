@@ -12,7 +12,7 @@
 						<a>
 							<img :src="ftpIP + movie.imgpath" class="imgClass">
 						</a>
-						<p class="titleClass">{{movie.title}}</p>
+						<h3 class="titleClass">{{movie.title}}</h3>
 						<p class="discriptionClass" :title="movie.description">{{movie.description}}</p>
 					</div>
 				</div>
@@ -143,7 +143,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 	.containerBody {
-		min-height: 800px;
+		min-height: 900px;
 		z-index: 1000;
 	}
 
@@ -152,12 +152,13 @@
 	}
 
 	.movie_container {
-		min-height: 350px;
-		margin-top: 5px;
+		min-height: 410px;
+		padding: 0;
+		margin-right: 5px;
 	}
 
 	.moviepanel {
-		min-height: 370px;
+		min-height: 420px;
 		width: 100%;
 	}
 
@@ -169,7 +170,7 @@
 		BORDER-BOTTOM-WIDTH: 0px;
 		BORDER-RIGHT-WIDTH: 0px;
 		width: 100%;
-		height: 72%;
+		height: 76%;
 	}
 
 	.titleClass {
@@ -182,6 +183,8 @@
 		line-height: 18px;
 		text-align: left;
 		margin-top: 5px;
+		font-size: 13px;
+		font-weight:bold;
 	}
 
 	.discriptionClass {
@@ -192,11 +195,14 @@
 		text-overflow: ellipsis;
 		line-height: 18px;
 		text-align: left;
+		color: #5C5C5C;
 	}
 
 	.moviesClass {
 		float: left;
-		height: 170px;
-		margin-top: 10px;
+		height: 195px;
+		margin-top: 5px;
+		padding: 0;
+		padding-left: 5px;
 	}
 </style>
