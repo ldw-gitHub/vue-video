@@ -85,11 +85,11 @@
 				ThrillerMovieTmps: {},
 			}
 		},
-		props: {
+		/* props: {
 			username: {
 				type: String
 			},
-		}, //子组件显式的用 props 选项声明它期待获得的数据，这里申明 它想要一个叫做’ item‘ 的数据
+		}, *///子组件显式的用 props 选项声明它期待获得的数据，这里申明 它想要一个叫做’ item‘ 的数据
 		created() {
 			var movieType = ["actionMovieTmps-1", "artMovieTmps-2", "funnyMovieTmps-3", "ThrillerMovieTmps-4"];
 			//获取所有视频，后续加排序等。。。。
@@ -131,7 +131,7 @@
 				this.$router.push({
 					name: 'videoPlay',
 					params: {
-						username: this.username,
+						//username: this.username,
 						videoId: videoId,
 					}
 				})

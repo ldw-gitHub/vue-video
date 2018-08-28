@@ -66,7 +66,8 @@
 		},
 		methods: {
 			getRouterData() {
-				this.username = this.$route.params.username;
+				this.username = sessionStorage.getItem('username') ? sessionStorage.getItem('username') : localStorage.getItem(
+					'username');
 				this.videoId = this.$route.params.videoId;
 			},
 			getVideoById: function () {

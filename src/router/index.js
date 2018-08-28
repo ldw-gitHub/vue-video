@@ -15,22 +15,32 @@ Vue.use(VideoPlayer)
 export default new Router({  // 创建 router 实例，然后传 `routes` 配置
   routes: [
     {
-      path: '/login', //访问路径
-      name: 'login', //路径名
-      component: login //访问的组件,即访问‘/’,它会加载 index 组件所有的内容
+      path: '/', //进首页
+      name: 'index', //路径名
+      component: index, //
+			meta: { requiresAuth: true }
     },
+		{
+			path: '/login', //访问路径
+			name: 'login', //路径名
+			component: login, 
+			meta: { requiresAuth: true }
+		},
 		{
 			path:'/index',
 			name:'index',
-			component:index
+			component:index,//访问的组件,即访问‘/’,它会加载 index 组件所有的内容
+			meta: { requiresAuth: true }
 		},{
 			path:'/uploadModule',
 			name:'upload',
-			component:upload
+			component:upload,
+			meta: { requiresAuth: true }
 		},{
 			path:'/videoPlay/:videoId',
 			name:'videoPlay',
-			component:videoPlay
+			component:videoPlay,
+			meta: { requiresAuth: false }
 		}
   ]
 })
