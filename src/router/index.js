@@ -4,6 +4,7 @@ import index from '@/components/index' // 导入index.vue 组件
 import login from '@/components/login' // 导入login.vue 组件
 import upload from '@/components/uploadModule' 
 import videoPlay from '@/components/videoPlay' 
+import myresource from '@/components/myResource' 
 
 Vue.use(Router) //全局注册Router组件，它会绑定到Vue实例里面。
 
@@ -31,7 +32,14 @@ export default new Router({  // 创建 router 实例，然后传 `routes` 配置
 			name:'index',
 			component:index,//访问的组件,即访问‘/’,它会加载 index 组件所有的内容
 			meta: { requiresAuth: true }
-		},{
+		},
+		{
+			path:'/myresource',
+			name:'myresource',
+			component:myresource,//访问的组件,即访问‘/’,它会加载 index 组件所有的内容
+			meta: { requiresAuth: true }
+		},
+		{
 			path:'/uploadModule',
 			name:'upload',
 			component:upload,

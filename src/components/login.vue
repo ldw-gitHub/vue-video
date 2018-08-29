@@ -83,9 +83,11 @@
 								if (remFlag) {
 									localStorage.setItem("sessionToken", data.accessToken);
 									localStorage.setItem("username", data.user.username);
+									localStorage.setItem("userId", data.user.id);
 								} else {
 									sessionStorage.setItem('sessionToken', data.accessToken);
-									localStorage.setItem("username", data.user.username);
+									sessionStorage.setItem("username", data.user.username);
+									sessionStorage.setItem("userId", data.user.id);
 								}
 								routers.push({
 									name: 'index',

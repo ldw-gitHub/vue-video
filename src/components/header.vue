@@ -68,7 +68,7 @@
 					},
 					{
 						title: '我的资源',
-						id: ''
+						id: 'myresource'
 					},
 					{
 						title: '上传',
@@ -78,6 +78,7 @@
 				nowIndex: -1,
 				server: this.GLOBAL.server,
 				username: "",
+				userId: "",
 			}
 		},
 		created() {
@@ -92,10 +93,12 @@
 			relationClick(id) {
 				if (this.relations[id].id != "") {
 					//限制需要登入的模块
-					if (this.relations[id].id == 'upload' &&
-						(this.username == '' || this.username == null)) {
+					if ((this.relations[id].id == 'upload' || this.relations[id].id == 'myresource')
+					     &&
+						(this.username == '' || this.username == null)
+						) {
 						this.$layer.msg("需要登入访问");
-					} else {
+					}else {
 						this.$router.push({
 							name: this.relations[id].id,
 						})
@@ -105,6 +108,8 @@
 			initData: function () {
 				this.username = sessionStorage.getItem('username') ? sessionStorage.getItem('username') : localStorage.getItem(
 					'username');
+				this.userId = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : localStorage.getItem(
+					'userId');
 			},
 			logout: function () {
 				var routers = this.$router;
