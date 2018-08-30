@@ -17,11 +17,10 @@
 			</div>
 			<div class="row">
 				<button type="button" id="loginbut" class="btn btn-default" @click="login">login</button>
-				<button type="button" class="btn btn-default" style="display: none;" v-on:click="doRegist">regist</button>
+				<button type="button" class="btn btn-default" v-on:click="returnindex">index</button>
 				<input type="checkbox" style="margin-left: 20px;margin-top: 10px;" name="remember" id="remember" value="0" />记住我
 			</div>
 		</div>
-
 	</div>
 
 
@@ -37,14 +36,16 @@
 			}
 		},
 		methods: {
-			doRegist: function () {
-				this.$layer.msg("暂不支持注册!");
+			returnindex: function () {
+				this.$router.push({
+					name: 'index',
+				})
 			},
 			login: function () {
 				var routers = this.$router;
-				
-				if((sessionStorage.getItem('sessionToken') || localStorage.getItem('sessionToken'))
-				    &&(sessionStorage.getItem('username') || localStorage.getItem('username'))){
+
+				if ((sessionStorage.getItem('sessionToken') || localStorage.getItem('sessionToken')) &&
+					(sessionStorage.getItem('username') || localStorage.getItem('username'))) {
 					routers.push({
 						name: 'index',
 					})

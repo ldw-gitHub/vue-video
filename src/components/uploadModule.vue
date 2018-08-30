@@ -8,16 +8,27 @@
 			<!-- content -->
 			<div class="containerBody">
 				<div class="container">
-					<form id="uploadFileForm" name="uploadFileForm" method="post">
+					<form id="uploadFileForm" name="uploadFileForm" method="post" role="form">
 						<div class="form-group row">
 							<label class="col-lg-2 control-label">视频类型：</label>
 							<div class="col-lg-6" style="height:30px;">
-								<select id="videoType" name="videoType" class="selectpicker" data-style="btn-primary">
+								<select id="videoType" name="videoType" class="form-control">
 									<option value="1">动作</option>
 									<option value="2">文艺</option>
 									<option value="3">搞笑</option>
 									<option value="4">惊悚</option>
 								</select>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-lg-2 control-label">是否分享该视频：</label>
+							<div class="col-lg-6" style="height:30px;">
+								<label class="radio-inline">
+									<input type="radio" name="isown" id="isown1" value="0" checked> 分享
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="isown" id="isown2" value="1"> 私有
+								</label>
 							</div>
 						</div>
 						<div class="form-group row">
