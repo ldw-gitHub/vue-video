@@ -17,7 +17,7 @@ export default new Router({  // 创建 router 实例，然后传 `routes` 配置
   routes: [
     {
       path: '/', //进首页
-      name: 'index', //路径名
+      name: 'indexs', //路径名
       component: index, //
 			meta: { requiresAuth: true }
     },

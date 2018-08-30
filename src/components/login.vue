@@ -1,5 +1,5 @@
 <template>
-	<div id="login_info">
+	<div id="login_info" v-bind:style="{backgroundImage:'url(' + imageUrl + ')'}">
 		<div class="container">
 			<div class="row">
 				<label class='col-md-2 col-md-offset-3' style="padding-right: 0;">username</label>
@@ -33,7 +33,27 @@
 		data() {
 			return {
 				server: this.GLOBAL.server,
+				imageUrl: '',
 			}
+		},
+		mounted() {
+			window.onload = function temp1(){
+				let clientWidths = document.body.clientWidth;
+				if(clientWidths < 768){
+					this.imageUrl = "../assets/img/James.jpg";
+				}else{
+					this.imageUrl = "../assets/img/girl.jpg";
+				}
+			}
+			window.onresize = function temp() {
+				console.log(111)
+				let clientWidths = document.body.clientWidth;
+				if(clientWidths < 768){
+					this.imageUrl = "../assets/img/James.jpg";
+				}else{
+					this.imageUrl = "../assets/img/girl.jpg";
+				}
+			};
 		},
 		methods: {
 			returnindex: function () {
@@ -110,7 +130,6 @@
 	#login_info {
 		width: 100%;
 		height: 943px;
-		background-image: url(../assets/img/girl.jpg);
 		background-size: cover;
 		text-align: center;
 	}

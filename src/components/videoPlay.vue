@@ -6,12 +6,56 @@
 		</div>
 		<div class="row col-md-10 col-md-offset-1" style="min-height: 800px;">
 			<!-- content -->
-			<div class="panel panel-success col-md-9" style="padding: 0;">
-				<div class="panel-heading">
-					<h4 class="panel-title">{{videoModel.title}}</h4>
+			<div class="row col-md-12" style="padding: 0;">
+				<div class="panel panel-success col-md-9" style="padding: 0;">
+					<div class="panel-heading">
+						<h4 class="panel-title">{{videoModel.title}}</h4>
+					</div>
+					<div id="pictruePath" class="panel-body">
+						<video-player class="video-player vjs-custom-skin" ref="videoPlayer" :playsinline="true" :options="playerOptions"></video-player>
+					</div>
 				</div>
-				<div id="pictruePath" class="panel-body">
-					<video-player class="video-player vjs-custom-skin" ref="videoPlayer" :playsinline="true" :options="playerOptions"></video-player>
+				<div class="panel panel-success visible-md-block visible-lg-block col-md-2 col-md-offset-1" style="padding: 0;">
+					<div class="panel-heading">
+						<h4 class="panel-title">相关视频</h4>
+					</div>
+					<div class="panel-body" style="height: 640px;">
+
+					</div>
+				</div>
+			</div>
+
+			<div class="row col-md-9" style="margin-top: 10px;">
+				<div class="form-group">
+					<label for="name">留言：</label>
+					<textarea class="form-control" id="commentvalue" rows="3" placeholder="<50"></textarea>
+				</div>
+				<div class="row col-md-offset-11 col-xs-offset-8">
+					<button type="button" class="btn btn-default" @click="commentClick">comment</button>
+				</div>
+			</div>
+
+			<div class="row col-md-9">
+				<hr class="hr0" />
+			</div>
+
+			<!-- 留言框 -->
+			<div v-for="(commentNumber,index) in commentList" :meta="commentNumber" :key="index" class="row col-md-9" style="padding: 10px;padding-bottom:5px;">
+				<div class="row">
+					<div class="col-md-1 col-xs-2">
+						<figure style="width: 50px;height: 50px;">
+							<img class="img-circle" src="../assets/img/toux.jpeg" style="width: 40px;" alt="头像" />
+						</figure>
+					</div>
+					<div class="col-md-9 col-xs-10">
+						<span class="comments">{{commentNumber.msg}}</span>
+					</div>
+					<div class="col-md-2">
+						<span class="comment_name">{{commentNumber.commentusername}} | {{commentNumber.createtime}}</span>
+					</div>
+				</div>
+				<div class="row">
+					<hr class="hr1" />
 				</div>
 			</div>
 		</div>
@@ -33,7 +77,9 @@
 				server: this.GLOBAL.server,
 				username: {},
 				videoId: {},
+				userId: {},
 				videoModel: {},
+				commentList: {},
 				playerOptions: {
 					playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度 
 					autoplay: false, //如果true,浏览器准备好时开始回放。 
@@ -63,11 +109,80 @@
 		created() {
 			this.getRouterData();
 			this.getVideoById();
+			this.initComment(this);
 		},
 		methods: {
+			commentClick: function () {
+				let commentValues = $("#commentvalue").val();
+
+				if (!sessionStorage.getItem('sessionToken') && !localStorage.getItem('sessionToken')) {
+					this.$layer.msg("登入后评论");
+					return;
+				}
+				if (commentValues.length <= 0 || commentValues == "") {
+					return;
+				}
+				if (commentValues.length > 50) {
+					this.$layer.msg("评论过长");
+					return;
+				}
+
+
+				let videoId = this.videoId;
+				let username = this.username;
+				let userId = this.userId;
+				let server = this.server;
+				let that = this;
+
+				$.ajax({
+					type: "post",
+					url: server + "/video/saveVideoComments",
+					data: {
+						"videoId": videoId,
+						"comments": commentValues,
+						"username": username,
+						"userId": userId
+					},
+					success: function (result) {
+						if (result.success) {
+							that.$options.methods.initComment(that); //刷新评论
+							$("#commentvalue").val("");
+						}
+					}
+				})
+
+
+
+			},
+			initComment: function (that) {
+				let videoId = that.videoId;
+				let server = that.server;
+
+				$.ajax({
+					type: "get",
+					url: server + "/video/getVideoCommentsByid",
+					data: {
+						"videoId": videoId
+					},
+					success: function (result) {
+						result = JSON.parse(result);
+						if (result.success) {
+							var msgs = result.data;
+							let size = msgs.length;
+							for (let i = 0; i < size; i++) {
+								msgs[i].createtime = that.$options.methods.timestamp2Time(msgs[i].createtime + '', '-');
+							}
+							that.commentList = msgs;
+						}
+					}
+				})
+
+			},
 			getRouterData() {
 				this.username = sessionStorage.getItem('username') ? sessionStorage.getItem('username') : localStorage.getItem(
 					'username');
+				this.userId = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : localStorage.getItem(
+					'userId');
 				this.videoId = this.$route.params.videoId;
 			},
 			getVideoById: function () {
@@ -90,11 +205,42 @@
 							that.videoModel = tmp;
 							that.playerOptions.poster = ftpip + tmp.imgpath;
 							that.playerOptions.sources[0].src = ftpip + tmp.videopath;
-                            console.log(ftpip + tmp.videopath);
+							console.log(ftpip + tmp.videopath);
 							console.log(that.playerOptions.sources[0].src);
 						}
 					}
 				})
+			},
+			timestamp2Time: function (timestamp, separator) {
+				var result = "";
+				if (timestamp) {
+					var reg = new RegExp(/\D/, "g"); //提取数字字符串
+					var timestamp_str = timestamp.replace(reg, "");
+					var d = new Date();
+					d.setTime(timestamp_str);
+					var year = d.getFullYear();
+					var month = d.getMonth() + 1;
+					var day = d.getDate();
+
+					var hour = d.getHours();
+					var miniter = d.getMinutes();
+					if (miniter < 10) {
+						miniter = "0" + miniter;
+					}
+					var seconds = d.getSeconds();
+					if (seconds < 10) {
+						seconds = "0" + seconds;
+					}
+
+					if (month < 10) {
+						month = "0" + month;
+					}
+					if (day < 10) {
+						day = "0" + day;
+					}
+					result = year + separator + month + separator + day + " " + hour + ":" + miniter + ":" + seconds;
+				}
+				return result;
 			},
 		},
 		components: { // * 注册menus组件，让其可以在template调用
@@ -106,7 +252,33 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.video-js .vjs-big-play-button{
-	
-}
+	.video-js .vjs-big-play-button {}
+
+	.hr0 {
+		height: 1px;
+		border: none;
+		border-top: 1px solid #CCCCCC;
+	}
+
+	.hr1 {
+		height: 1px;
+		border: none;
+		border-top: 1px dashed #CCCCCC;
+	}
+
+	.comments {
+		height: 50px;
+		line-height: 50px;
+		text-overflow: inherit;
+		font-family: "arial rounded mt bold";
+	}
+
+	.comment_name {
+		height: 50px;
+		line-height: 50px;
+		text-overflow: inherit;
+		font-family: "arial rounded mt bold";
+		font-size: 12px;
+		color: #B9BBBE;
+	}
 </style>
