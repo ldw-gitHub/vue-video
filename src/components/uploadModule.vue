@@ -24,7 +24,7 @@
 							<label class="col-lg-2 control-label">是否分享该视频：</label>
 							<div class="col-lg-6" style="height:30px;">
 								<label class="radio-inline">
-									<input type="radio" name="isown" id="isown1" value="0" checked> 分享
+									<input type="radio" name="isown" v-on:click="changeRadio" id="isown1" value="0" checked="checked"> 分享
 								</label>
 								<label class="radio-inline">
 									<input type="radio" name="isown" id="isown2" value="1"> 私有
@@ -121,6 +121,10 @@
 			this.init_upload();
 		},
 		methods: {
+			changeRadio: function(obj){
+				$('input:radio[name="isown"]:checked').prop("checked","checked").siblings().removeAttr("checked")
+				$(obj).attr("checked","checked");
+			},
 			getRouterData() {
 				this.username = sessionStorage.getItem('username') ? sessionStorage.getItem('username') : localStorage.getItem(
 					'username');
@@ -339,6 +343,9 @@
 					this.$layer.alert("主题名称太长");
 					return;
 				}
+				
+				var isownVal=$('input:radio[name="isown"]:checked').val();
+				fromData.isown = isownVal;
 
 				var datas = JSON.parse(JSON.stringify(fromData));
 				console.log(datas);

@@ -1,5 +1,5 @@
 <template>
-	<div id="login_info" v-bind:style="{backgroundImage:'url(' + imageUrl + ')'}">
+	<div id="login_info" v-if="clientWidths" v-bind:style="{backgroundImage:'url(' + (clientWidths < 768 ? ftpIP + coverImgUrl : ftpIP + baseImg) + ')'}">
 		<div class="container">
 			<div class="row">
 				<label class='col-md-2 col-md-offset-3' style="padding-right: 0;">username</label>
@@ -29,31 +29,24 @@
 
 <script>
 	export default {
-		name: 'login',
 		data() {
 			return {
+				ftpIP: this.GLOBAL.ftpIP,
 				server: this.GLOBAL.server,
-				imageUrl: '',
+				coverImgUrl: 'bk/timg1.jpg',
+				baseImg: 'bk/girl.jpg',
+				clientWidths: '',
 			}
 		},
 		mounted() {
-			window.onload = function temp1(){
-				let clientWidths = document.body.clientWidth;
-				if(clientWidths < 768){
-					this.imageUrl = "../assets/img/James.jpg";
-				}else{
-					this.imageUrl = "../assets/img/girl.jpg";
-				}
-			}
 			window.onresize = function temp() {
-				console.log(111)
-				let clientWidths = document.body.clientWidth;
-				if(clientWidths < 768){
-					this.imageUrl = "../assets/img/James.jpg";
-				}else{
-					this.imageUrl = "../assets/img/girl.jpg";
-				}
+				this.clientWidths = document.body.clientWidth;
+				console.log(this.clientWidths);
 			};
+		},
+		created() {
+			this.clientWidths = document.body.clientWidth;
+			console.log(this.clientWidths);
 		},
 		methods: {
 			returnindex: function () {
