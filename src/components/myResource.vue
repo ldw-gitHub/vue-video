@@ -6,9 +6,11 @@
 		</div>
 		<div class="row col-md-10 col-md-offset-1" style="min-height: 800px;">
 			<!-- content -->
-			<div class="panel panel-primary moviepanel">
+			<div class="panel moviepanel">
 				<div class="panel-heading">
-					<h4 class="panel-title">我的视频</h4>
+					<h4 class="panel-title">
+						<span>我的视频</span>
+					</h4>
 				</div>
 				<div class="panel-body" style="width: 100%; padding-top: 5px;">
 					<div id="artMovie" class="col-md-12 movie_container">
@@ -16,8 +18,14 @@
 							<a>
 								<img :src="ftpIP + movie.imgpath" class="imgClass">
 							</a>
-							<p class="titleClass">{{movie.title}}</p>
+							<p class="movetitleClass">{{movie.title}}</p>
+							<p class="glyphicon glyphicon-eye-open seeImage">
+								<span style="margin-left: 10px;">{{movie.click}}</span>
+							</p>
 							<p class="discriptionClass" :title="movie.description">{{movie.description}}</p>
+							<p class="glyphicon glyphicon-align-left seeImage">
+								<span style="margin-left: 10px;">{{movie.commentsnumber}}</span>
+							</p>
 						</div>
 					</div>
 				</div>
@@ -93,6 +101,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+	.panel-title {
+		font-size: 18px;
+		font-family: "arial black";
+	}
 	.movie_container {
 		min-height: 800px;
 		padding: 0;
@@ -115,10 +127,10 @@
 		height: 76%;
 	}
 
-	.titleClass {
+	.movetitleClass {
 		cursor: pointer;
 		height: 18px;
-		width: 95%;
+		width: 75%;
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
@@ -127,22 +139,31 @@
 		margin-top: 5px;
 		font-size: 13px;
 		font-weight: bold;
+		float: left;
 	}
 
 	.discriptionClass {
 		height: 18px;
-		width: 95%;
+		width: 75%;
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		line-height: 18px;
 		text-align: left;
 		color: #5C5C5C;
+		float: left;
 	}
 
 	.moviesClass {
-		float: left;
 		height: 195px;
 		margin-top: 5px;
+	}
+
+	.seeImage {
+		height: 20px;
+		line-height: 18px;
+		width: 25%;
+		color: #5C5C5C;
+		font-size: 10px;
 	}
 </style>

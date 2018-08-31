@@ -1,5 +1,5 @@
 <template>
-	<nav class="navbar navbar-default navbar-fixed-top col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-1" role="navigation">
+	<nav class="navbar navbar-default navbar-fixed-top col-xs-12 col-xs-offset-0 col-md-12 col-md-offset-0 titleClass" role="navigation">
 		<div class="container">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#video-navbar-collapse">
@@ -53,9 +53,9 @@
 				</ul>
 			</div>
 
-
 		</div>
 	</nav>
+
 </template>
 
 <script>
@@ -93,12 +93,11 @@
 			relationClick(id) {
 				if (this.relations[id].id != "") {
 					//限制需要登入的模块
-					if ((this.relations[id].id == 'upload' || this.relations[id].id == 'myresource')
-					     &&
+					if ((this.relations[id].id == 'upload' || this.relations[id].id == 'myresource') &&
 						(this.username == '' || this.username == null)
-						) {
+					) {
 						this.$layer.msg("需要登入访问");
-					}else {
+					} else {
 						this.$router.push({
 							name: this.relations[id].id,
 						})
@@ -159,4 +158,17 @@
 		cursor: pointer;
 		width: 80%;
 	}
+
+	.titleClass {
+		background-color: #649ffb;
+		z-index: 1100;
+		color: #030303;
+		text-shadow: black 1px 1px 1px;;
+		font-weight: bolder;
+		font-family: "arial black";
+		position: fixed;
+		left: 0;
+		right: 0;
+	}
+
 </style>

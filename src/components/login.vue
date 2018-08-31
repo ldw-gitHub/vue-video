@@ -4,14 +4,14 @@
 			<div class="row">
 				<label class='col-md-2 col-md-offset-3' style="padding-right: 0;">username</label>
 				<div class="col-xs-8 col-xs-offset-2 col-md-2 col-md-offset-0" style="padding:0;">
-					<input type="text" id="username" name="username" class="form-control">
+					<input type="text" id="username" name="username" autocomplete="on" class="form-control">
 					<br>
 				</div>
 			</div>
 			<div class="row">
 				<label class='col-md-2 col-md-offset-3' style="padding-right: 0;">password</label>
 				<div class="col-xs-8 col-xs-offset-2 col-md-2 col-md-offset-0" style="padding:0;">
-					<input type="password" id="password" name="password" class="form-control">
+					<input type="password" id="password" name="password" autocomplete="on" class="form-control">
 					<br>
 				</div>
 			</div>

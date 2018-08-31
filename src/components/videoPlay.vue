@@ -7,7 +7,7 @@
 		<div class="row col-md-10 col-md-offset-1" style="min-height: 800px;">
 			<!-- content -->
 			<div class="row col-md-12" style="padding: 0;">
-				<div class="panel panel-success col-md-9" style="padding: 0;">
+				<div class="panel col-md-9" style="padding: 0;">
 					<div class="panel-heading">
 						<h4 class="panel-title">{{videoModel.title}}</h4>
 					</div>
@@ -15,7 +15,7 @@
 						<video-player class="video-player vjs-custom-skin" ref="videoPlayer" :playsinline="true" :options="playerOptions"></video-player>
 					</div>
 				</div>
-				<div class="panel panel-success visible-md-block visible-lg-block col-md-2 col-md-offset-1" style="padding: 0;">
+				<div class="panel visible-md-block visible-lg-block col-md-2 col-md-offset-1" style="padding: 0;">
 					<div class="panel-heading">
 						<h4 class="panel-title">相关视频</h4>
 					</div>
@@ -253,6 +253,11 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 	.video-js .vjs-big-play-button {}
+
+	.panel-title {
+		font-size: 18px;
+		font-family: "arial black";
+	}
 
 	.hr0 {
 		height: 1px;
