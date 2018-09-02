@@ -17,7 +17,18 @@
 				<ul class="nav navbar-nav" id="menu_index">
 					<li v-for="(relation,index) in relations" :meta="relation" :key="index" v-bind:id="relation.id" v-bind:class="{active:index==nowIndex}"
 					    v-on:click="relationClick(index)">
-						<a>{{relation.title}}</a>
+						<ul class="nav navbar-nav">
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+									{{relation.title}}
+								</a>
+								<ul v-if="relation.id == 'index'" class="dropdown-menu" role="menu">
+									<li v-for="(movie,indexs) in movieType" :meta="movie" :key="indexs"  v-bind:class="{active:indexs==movieIndex}">
+										<a v-on:click="loginThisPage(movie,movieTitle[indexs])" style="cursor: pointer;">{{movieTitle[indexs]}}</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
 					</li>
 					<li v-if="username != '' && username != null" class="nav navbar-nav navbar-right" style="margin-left:15px;">
 						<ul class="nav navbar-nav">
@@ -79,6 +90,9 @@
 				server: this.GLOBAL.server,
 				username: "",
 				userId: "",
+				movieTitle:['电影','宝宝','电视剧','动画片'],
+				movieType:["actionMovieTmps-1", "artMovieTmps-2", "funnyMovieTmps-3", "ThrillerMovieTmps-4"],
+				movieIndex: -1,
 			}
 		},
 		created() {
@@ -90,6 +104,17 @@
 			},
 		}, */ //子组件显式的用 props 选项声明它期待获得的数据，这里申明 它想要一个叫做’ item‘ 的数据,
 		methods: {
+			loginThisPage:function(movie,title){
+				movie = movie.split("-")[1];
+				console.log(movie,title);
+				this.$router.push({
+					name: "classifiedMovie",
+					params:{
+						movie : movie,
+						title : title,
+					},
+				})
+			},
 			relationClick(id) {
 				if (this.relations[id].id != "") {
 					//限制需要登入的模块
@@ -162,8 +187,7 @@
 	.titleClass {
 		background-color: #649ffb;
 		z-index: 1100;
-		color: #030303;
-		text-shadow: black 1px 1px 1px;;
+		color: black;
 		font-weight: bolder;
 		font-family: "arial black";
 		position: fixed;

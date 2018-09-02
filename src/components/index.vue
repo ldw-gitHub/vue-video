@@ -13,6 +13,7 @@
 			<!-- 底部 -->
 			<footers></footers>
 		</div>
+		<router-view></router-view>
 	</div>
 </template>
 
@@ -55,5 +56,4 @@
 		right: 0;
 		left: 0;
 	}
-
 </style>

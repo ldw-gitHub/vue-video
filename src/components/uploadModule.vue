@@ -13,10 +13,10 @@
 							<label class="col-lg-2 control-label">视频类型：</label>
 							<div class="col-lg-6" style="height:30px;">
 								<select id="videoType" name="videoType" class="form-control">
-									<option value="1">动作</option>
-									<option value="2">文艺</option>
-									<option value="3">搞笑</option>
-									<option value="4">惊悚</option>
+									<option value="1">宝宝</option>
+									<option value="2">电影</option>
+									<option value="3">电视剧</option>
+									<option value="4">动画片</option>
 								</select>
 							</div>
 						</div>

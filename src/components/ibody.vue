@@ -3,12 +3,12 @@
 		<div class="panel moviepanel">
 			<div class="panel-heading">
 				<h4 class="panel-title">
-					<span>动作</span>
+					<span>{{movieTitle[0]}}</span>
 				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
 				<div id="actionMovie" class="col-md-12 movie_container">
-					<div v-for="(movie,index) in actionMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" class="col-md-2 col-xs-12 moviesClass">
+					<div v-for="(movie,index) in artMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" class="col-md-2 col-xs-12 moviesClass">
 						<a>
 							<img :src="ftpIP + movie.imgpath" class="imgClass">
 						</a>
@@ -24,12 +24,12 @@
 		<div class="panel moviepanel">
 			<div class="panel-heading">
 				<h4 class="panel-title">
-					<span>文艺</span>
+					<span>{{movieTitle[1]}}</span>
 				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
 				<div id="artMovie" class="col-md-12 movie_container">
-					<div v-for="(movie,index) in artMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" class="col-md-2 col-xs-12 moviesClass">
+					<div v-for="(movie,index) in actionMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" class="col-md-2 col-xs-12 moviesClass">
 						<a>
 							<img :src="ftpIP + movie.imgpath" class="imgClass">
 						</a>
@@ -45,7 +45,7 @@
 		<div class="panel moviepanel">
 			<div class="panel-heading">
 				<h4 class="panel-title">
-					<span>搞笑</span>
+					<span>{{movieTitle[2]}}</span>
 				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
@@ -66,7 +66,7 @@
 		<div class="panel moviepanel">
 			<div class="panel-heading">
 				<h4 class="panel-title">
-					<span>惊悚</span>
+					<span>{{movieTitle[3]}}</span>
 				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
@@ -97,6 +97,8 @@
 				artMovieTmps: {},
 				funnyMovieTmps: {},
 				ThrillerMovieTmps: {},
+				movieTitle:['电影','宝宝','电视剧','动画片'],
+				movieType:["actionMovieTmps-1", "artMovieTmps-2", "funnyMovieTmps-3", "ThrillerMovieTmps-4"],
 			}
 		},
 		/* props: {
@@ -105,7 +107,7 @@
 			},
 		}, */ //子组件显式的用 props 选项声明它期待获得的数据，这里申明 它想要一个叫做’ item‘ 的数据
 		created() {
-			var movieType = ["actionMovieTmps-1", "artMovieTmps-2", "funnyMovieTmps-3", "ThrillerMovieTmps-4"];
+			var movieType = this.movieType;
 			//获取所有视频，后续加排序等。。。。
 			for (var i = 0; i < movieType.length; i++) {
 				this.getVideoInfo(movieType[i].split("-")[0], movieType[i].split("-")[1]);
