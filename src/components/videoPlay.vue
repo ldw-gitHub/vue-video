@@ -19,8 +19,14 @@
 					<div class="panel-heading">
 						<h4 class="panel-title">相关视频</h4>
 					</div>
-					<div class="panel-body" style="height: 640px;">
-
+					<div class="panel-body" style="height: 640px;overflow:auto">
+						<div v-for="(movie,index) in relatedMovies" :meta="movie" :key="index" v-on:click="getVideoById(movie.id)" class="moviesClass">
+							<a>
+								<img :src="ftpIP + movie.imgpath" class="imgClass">
+							</a>
+							<p class="movetitleClass">{{movie.title}}</p>
+							<p class="discriptionClass" :title="movie.description">{{movie.description}}</p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -80,6 +86,7 @@
 				userId: {},
 				videoModel: {},
 				commentList: {},
+				relatedMovies: {},
 				playerOptions: {
 					playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度 
 					autoplay: false, //如果true,浏览器准备好时开始回放。 
@@ -108,7 +115,7 @@
 		},
 		created() {
 			this.getRouterData();
-			this.getVideoById();
+			this.getVideoById(this.videoId);
 			this.initComment(this);
 		},
 		methods: {
@@ -185,8 +192,7 @@
 					'userId');
 				this.videoId = this.$route.params.videoId;
 			},
-			getVideoById: function () {
-				let videoid = this.videoId;
+			getVideoById: function (videoid) {
 				let server = this.server;
 				let ftpip = this.ftpIP;
 				var that = this;
@@ -201,12 +207,27 @@
 						result = JSON.parse(result);
 						if (result.success) {
 							var tmp = result.video;
-							console.log(tmp);
 							that.videoModel = tmp;
 							that.playerOptions.poster = ftpip + tmp.imgpath;
 							that.playerOptions.sources[0].src = ftpip + tmp.videopath;
-							console.log(ftpip + tmp.videopath);
-							console.log(that.playerOptions.sources[0].src);
+
+							//搜索相关视频
+							var thisTitle = tmp.title;
+							var thisDescription = tmp.description;
+							$.ajax({
+								type: "get",
+								url: server + "/video/findRelateVideos",
+								data: {
+									"thisTitle": thisTitle,
+									"thisDescription": thisDescription,
+								},
+								success: function (result) {
+									result = JSON.parse(result);
+									if (result.success) {
+										that.relatedMovies = result.data;
+									}
+								}
+							})
 						}
 					}
 				})
@@ -286,4 +307,48 @@
 		font-size: 12px;
 		color: #B9BBBE;
 	}
+
+	.movetitleClass {
+		cursor: pointer;
+		height: 16px;
+		width: 100%;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		line-height: 16px;
+		text-align: left;
+		margin-top: 5px;
+		font-size: 12px;
+		font-weight: bold;
+		float: left;
+	}
+
+	.discriptionClass {
+		height: 15px;
+		width: 100%;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		line-height: 15px;
+		text-align: left;
+		color: #5C5C5C;
+		float: left;
+		font-size: 11px;
+	}
+	
+	.imgClass {
+		cursor: pointer;
+		BORDER-TOP-WIDTH: 0px;
+		BORDER-LEFT-WIDTH: 0px;
+		FILTER: progid:DXImageTransform.Microsoft.RevealTrans (duration=2, transition=23);
+		BORDER-BOTTOM-WIDTH: 0px;
+		BORDER-RIGHT-WIDTH: 0px;
+		width: 100%;
+		height: 73%;
+	}
+	.moviesClass {
+		height: 180px;
+		margin-top: 5px;
+	}
+	
 </style>

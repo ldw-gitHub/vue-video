@@ -8,8 +8,9 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
 				</button>
-				<a href="#" class="navbar-brand">
+				<a href="#" class="navbar-brand" v-on:click="relationClick(0)">
 					<strong>VideoHome</strong>
 				</a>
 			</div>
@@ -17,18 +18,29 @@
 				<ul class="nav navbar-nav" id="menu_index">
 					<li v-for="(relation,index) in relations" :meta="relation" :key="index" v-bind:id="relation.id" v-bind:class="{active:index==nowIndex}"
 					    v-on:click="relationClick(index)">
-						<ul class="nav navbar-nav">
+						<a href="#" role="button" aria-haspopup="true" aria-expanded="false">
+							{{relation.title}}
+						</a>
+						<!-- 	<ul class="nav navbar-nav">
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 									{{relation.title}}
 								</a>
-								<ul v-if="relation.id == 'index'" class="dropdown-menu" role="menu">
+								 <ul v-if="relation.id == 'index'" class="dropdown-menu" role="menu">
 									<li v-for="(movie,indexs) in movieType" :meta="movie" :key="indexs"  v-bind:class="{active:indexs==movieIndex}">
 										<a v-on:click="loginThisPage(movie,movieTitle[indexs])" style="cursor: pointer;">{{movieTitle[indexs]}}</a>
 									</li>
-								</ul>
+								</ul> 
 							</li>
-						</ul>
+						</ul> -->
+					</li>
+					<li class="col-md-offset-4">
+						<form class="navbar-form navbar-left" role="search">
+							<div class="form-group">
+								<input type="text" class="form-control searchclass" placeholder="search">
+							</div>
+							<button type="submit" class="btn btn-sm" style="background-color: #649ddc;">Search</button>
+						</form>
 					</li>
 					<li v-if="username != '' && username != null" class="nav navbar-nav navbar-right" style="margin-left:15px;">
 						<ul class="nav navbar-nav">
@@ -90,8 +102,8 @@
 				server: this.GLOBAL.server,
 				username: "",
 				userId: "",
-				movieTitle:['电影','宝宝','电视剧','动画片'],
-				movieType:["actionMovieTmps-1", "artMovieTmps-2", "funnyMovieTmps-3", "ThrillerMovieTmps-4"],
+				movieTitle: ['电影', '家庭', '电视剧', '动画片'],
+				movieType: ["actionMovieTmps-1", "artMovieTmps-2", "funnyMovieTmps-3", "ThrillerMovieTmps-4"],
 				movieIndex: -1,
 			}
 		},
@@ -104,14 +116,14 @@
 			},
 		}, */ //子组件显式的用 props 选项声明它期待获得的数据，这里申明 它想要一个叫做’ item‘ 的数据,
 		methods: {
-			loginThisPage:function(movie,title){
+			loginThisPage: function (movie, title) {
 				movie = movie.split("-")[1];
-				console.log(movie,title);
+				console.log(movie, title);
 				this.$router.push({
 					name: "classifiedMovie",
-					params:{
-						movie : movie,
-						title : title,
+					params: {
+						movie: movie,
+						title: title,
 					},
 				})
 			},
@@ -194,5 +206,9 @@
 		left: 0;
 		right: 0;
 	}
-
+	.searchclass{
+		width: 200px;
+		height: 30px;
+		font-size: 12px;
+	}
 </style>

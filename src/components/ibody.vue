@@ -4,11 +4,12 @@
 			<div class="panel-heading">
 				<h4 class="panel-title">
 					<span>{{movieTitle[0]}}</span>
+					<span class="glyphicon glyphicon-send showMore" title="moreMovie" v-on:click="showMoreMovies(movieType[0],movieTitle[0])"></span>
 				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
 				<div id="actionMovie" class="col-md-12 movie_container">
-					<div v-for="(movie,index) in artMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" class="col-md-2 col-xs-12 moviesClass">
+					<div v-for="(movie,index) in actionMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" class="col-md-2 col-xs-12 moviesClass">
 						<a>
 							<img :src="ftpIP + movie.imgpath" class="imgClass">
 						</a>
@@ -25,11 +26,12 @@
 			<div class="panel-heading">
 				<h4 class="panel-title">
 					<span>{{movieTitle[1]}}</span>
+					<span class="glyphicon glyphicon-send showMore" title="moreMovie" v-on:click="showMoreMovies(movieType[1],movieTitle[1])"></span>
 				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
 				<div id="artMovie" class="col-md-12 movie_container">
-					<div v-for="(movie,index) in actionMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" class="col-md-2 col-xs-12 moviesClass">
+					<div v-for="(movie,index) in artMovieTmps" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" class="col-md-2 col-xs-12 moviesClass">
 						<a>
 							<img :src="ftpIP + movie.imgpath" class="imgClass">
 						</a>
@@ -46,6 +48,7 @@
 			<div class="panel-heading">
 				<h4 class="panel-title">
 					<span>{{movieTitle[2]}}</span>
+					<span class="glyphicon glyphicon-send showMore" title="moreMovie" v-on:click="showMoreMovies(movieType[2],movieTitle[2])"></span>
 				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
@@ -67,6 +70,7 @@
 			<div class="panel-heading">
 				<h4 class="panel-title">
 					<span>{{movieTitle[3]}}</span>
+					<span class="glyphicon glyphicon-send showMore" title="moreMovie" v-on:click="showMoreMovies(movieType[3],movieTitle[3])"></span>
 				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
@@ -97,7 +101,7 @@
 				artMovieTmps: {},
 				funnyMovieTmps: {},
 				ThrillerMovieTmps: {},
-				movieTitle:['电影','宝宝','电视剧','动画片'],
+				movieTitle:['电影','家庭','电视剧','动画片'],
 				movieType:["actionMovieTmps-1", "artMovieTmps-2", "funnyMovieTmps-3", "ThrillerMovieTmps-4"],
 			}
 		},
@@ -114,13 +118,24 @@
 			}
 		},
 		methods: {
+			showMoreMovies: function(movieType,title){
+				var movie = movieType.split("-")[1];
+				console.log(movie, title);
+				this.$router.push({
+					name: "classifiedMovie",
+					params: {
+						movie: movie,
+						title: title,
+					},
+				})
+			},
 			getVideoInfo: function (target, type) {
 				var ftpIP = this.ftpIP;
 				var server = this.server;
 				var that = this;
 				$.ajax({
 					type: "post",
-					url: server + "/video/findVideosByType",
+					url: server + "/video/indexFindVideosByType",
 					data: {
 						"videoType": type
 					},
@@ -236,5 +251,12 @@
 		width: 25%;
 		color: #5C5C5C;
 		font-size: 10px;
+	}
+	
+	.showMore{
+		float: right;
+		font-size: 13px;
+		cursor: pointer;
+		color: #649ffb;
 	}
 </style>

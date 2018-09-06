@@ -30,6 +30,9 @@
 					</div>
 				</div>
 			</div>
+
+            <pagination :total="total" :current-page='current' @pagechange="pagechange"></pagination>
+			
 		</div>
 		<div class="row">
 			<!-- 底部 -->
@@ -41,6 +44,7 @@
 <script>
 	import menus from './header'; // * 导入menus组件
 	import footers from './footer'; // * 导入 footer组件
+	import pagination from './pagination'; // * 导入 pagination 分页
 
 	export default {
 		data() {
@@ -50,11 +54,14 @@
 				username: "",
 				userId: "",
 				myMoviesTmp: {},
+				total: 1, // 记录总条数
+				pageSize: 24, // 每页显示条数
+				current: 1, // 当前的页数
 			}
 		},
 		created() {
 			this.initData();
-			this.getMyownVideos();
+			this.pagechange(1);
 		},
 		methods: {
 			initData() {
@@ -63,7 +70,7 @@
 				this.userId = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : localStorage.getItem(
 					'userId');
 			},
-			getMyownVideos: function () {
+			pagechange: function (currentPage) {
 				let userId = this.userId;
 				let server = this.server;
 				var that = this;
@@ -72,12 +79,15 @@
 					type: "get",
 					url: server + "/video/findMyOwnVideos",
 					data: {
-						"userId": userId
+						"userId": userId,
+						"pageSize": that.pageSize,
+						"currentPage": currentPage,
 					},
 					success: function (result) {
 						result = JSON.parse(result);
 						if (result.success) {
 							that.myMoviesTmp = result.data;
+							that.total = result.pages;
 						}
 					}
 				})
@@ -95,6 +105,7 @@
 		components: { // * 注册menus组件，让其可以在template调用
 			menus,
 			footers,
+			pagination,
 		}
 	};
 </script>
@@ -105,14 +116,15 @@
 		font-size: 18px;
 		font-family: "arial black";
 	}
+
 	.movie_container {
-		min-height: 800px;
+		min-height: 710px;
 		padding: 0;
 		margin-right: 5px;
 	}
 
 	.moviepanel {
-		min-height: 810px;
+		min-height: 736px;
 		width: 100%;
 	}
 
@@ -124,44 +136,45 @@
 		BORDER-BOTTOM-WIDTH: 0px;
 		BORDER-RIGHT-WIDTH: 0px;
 		width: 100%;
-		height: 76%;
+		height: 73%;
 	}
 
 	.movetitleClass {
 		cursor: pointer;
-		height: 18px;
+		height: 16px;
 		width: 75%;
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		line-height: 18px;
+		line-height: 16px;
 		text-align: left;
 		margin-top: 5px;
-		font-size: 13px;
+		font-size: 12px;
 		font-weight: bold;
 		float: left;
 	}
 
 	.discriptionClass {
-		height: 18px;
+		height: 15px;
 		width: 75%;
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		line-height: 18px;
+		line-height: 15px;
 		text-align: left;
 		color: #5C5C5C;
 		float: left;
+		font-size: 11px;
 	}
 
 	.moviesClass {
-		height: 195px;
+		height: 180px;
 		margin-top: 5px;
 	}
 
 	.seeImage {
-		height: 20px;
-		line-height: 18px;
+		height: 15px;
+		line-height: 15px;
 		width: 25%;
 		color: #5C5C5C;
 		font-size: 10px;
