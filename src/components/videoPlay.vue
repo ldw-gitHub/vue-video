@@ -220,6 +220,7 @@
 								data: {
 									"thisTitle": thisTitle,
 									"thisDescription": thisDescription,
+									"videoid":videoid,
 								},
 								success: function (result) {
 									result = JSON.parse(result);
