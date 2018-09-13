@@ -10,6 +10,17 @@
 				<div class="container">
 					<form id="uploadFileForm" name="uploadFileForm" method="post" role="form">
 						<div class="form-group row">
+							<label class="col-lg-2 control-label">上传文件类型：</label>
+							<div class="col-lg-6" style="height:30px;">
+								<label class="radio-inline">
+									<input type="radio" name="isShow" v-on:click="changeView" id="isVideo" value="0" checked="checked"> 视频
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="isShow" v-on:click="changeView" id="isFile" value="1"> 文件
+								</label>
+							</div>
+						</div>
+						<div v-if="isShowUploadVideo" class="form-group row">
 							<label class="col-lg-2 control-label">视频类型：</label>
 							<div class="col-lg-6" style="height:30px;">
 								<select id="videoType" name="videoType" class="form-control">
@@ -20,7 +31,7 @@
 								</select>
 							</div>
 						</div>
-						<div class="form-group row">
+						<div v-if="isShowUploadVideo" class="form-group row">
 							<label class="col-lg-2 control-label">是否分享该视频：</label>
 							<div class="col-lg-6" style="height:30px;">
 								<label class="radio-inline">
@@ -31,14 +42,14 @@
 								</label>
 							</div>
 						</div>
-						<div class="form-group row">
+						<div v-if="isShowUploadVideo" class="form-group row">
 							<label class="col-lg-2 control-label">封面图片：</label>
 							<div class="col-lg-6">
 								<input type="button" id="chooceImg" class="btn btn-default" OnClick='javascript:document.getElementById("inputImgfile").click();'
 								    value="选择图片" />
 								<input id="uploadImgPath" type="hidden" name="uploadImgPath" />
 								<input type="file" id="inputImgfile" v-on:change="uploadimages" style="display: none;" name="imagefile" />
-								<div id="uploadFile" v-show="uploadFileshow" style="margin-left:20px;padding: 5px 5px;">
+								<div id="uploadFile" v-show="uploadImgFileshow" style="margin-left:20px;padding: 5px 5px;">
 									<span style="font-size:12px;color:#000000">{{attachNameImg}}
 										<button type="button" id="deleteImgFile" v-on:click="deleteAttach('img')">删除</button>
 									</span>
@@ -51,7 +62,7 @@
 
 							</div>
 						</div>
-						<div class="form-group row">
+						<div v-if="isShowUploadVideo" class="form-group row">
 							<label class="col-lg-2 control-label">视频：</label>
 							<div class="col-lg-6">
 								<input type="button" id="chooceVideo" class="btn btn-default" OnClick='javascript:document.getElementById("inputVideofile").click();'
@@ -71,19 +82,44 @@
 
 							</div>
 						</div>
-						<div class="form-group row">
+						<div v-if="isShowUploadVideo" class="form-group row">
 							<label for="description" class="col-lg-2 control-label">内容说明：</label>
 							<div class="col-lg-6">
 								<textarea type="text" class="form-control" id="description" name="description" placeholder="介绍...不超过100"></textarea>
 							</div>
 						</div>
-						<div class="form-group row">
+						<div v-if="isShowUploadVideo" class="form-group row">
 							<label for="filename" class="col-lg-2 control-label">主题名称：</label>
 							<div class="col-lg-6">
 								<input type="text" class="form-control" id="filename" name="filename" placeholder="请输入主题名称...不超过50">
 							</div>
 						</div>
-						<div class="form-group row">
+						<div v-if="!isShowUploadVideo" class="form-group row">
+							<label class="col-lg-2 control-label">选择文件：</label>
+							<div class="col-lg-6">
+								<input type="button" id="chooceFile" class="btn btn-default" OnClick='javascript:document.getElementById("inputfile").click();'
+								    value="选择文件" />
+								<input id="uploadFilePath" type="hidden" name="uploadFilePath" />
+								<input type="file" id="inputfile" v-on:change="uploadFiles" style="display: none;" name="isfile" />
+								<div id="isUploadFile" v-show="uploadFileshow" style="margin-left:20px;padding: 2px 3px;">
+									<span style="font-size:12px;color:#000000">{{attachNameFile}}
+										<button type="button" v-on:click="deleteAttach('file')">删除</button>
+									</span>
+								</div>
+
+								<div class="progress" id="file-progress" style="margin-top: 10px;display: none;">
+									<div class="progress-bar" id="file-progress-width" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+									    style="width: 0%;"></div>
+								</div>
+
+							</div>
+						</div>
+						<div v-if="!isShowUploadVideo" class="form-group row">
+							<div class="col-sm-offset-2 col-sm-10">
+								<button type="button" id="submitUpload" v-on:click="submitUpload" class="btn btn-primary">提交</button>
+							</div>
+						</div>
+						<div v-if="isShowUploadVideo" class="form-group row">
 							<div class="col-sm-offset-2 col-sm-10">
 								<button type="button" id="submitUploadFile" v-on:click="submitUploadFile" class="btn btn-primary">提交</button>
 							</div>
@@ -110,10 +146,16 @@
 				username: {},
 				ftpIP: this.GLOBAL.ftpIP,
 				server: this.GLOBAL.server,
+				sessionToken: this.GLOBAL.sessionToken,
 				uploadFileshow: false,
+				uploadImgFileshow: false,
 				uploadVideoFileshow: false,
 				attachNameImg: "",
 				attachNameVideo: "",
+				attachNameFile: "",
+				isShowUploadVideo: true,
+				fileSize: {},
+				userId: {},
 			}
 		},
 		created() {
@@ -121,19 +163,30 @@
 			this.init_upload();
 		},
 		methods: {
-			changeRadio: function(obj){
-				$('input:radio[name="isown"]:checked').prop("checked","checked").siblings().removeAttr("checked")
-				$(obj).attr("checked","checked");
+			changeView: function (obj) {
+				$('input:radio[name="isShow"]:checked').prop("checked", "checked").siblings().removeAttr("checked")
+				$(obj).attr("checked", "checked");
+				var isShowPage = $("input[name='isShow']:checked").val();
+				if (isShowPage == 0) {
+					this.isShowUploadVideo = true;
+				} else {
+					this.isShowUploadVideo = false;
+				}
+			},
+			changeRadio: function (obj) {
+				$('input:radio[name="isown"]:checked').prop("checked", "checked").siblings().removeAttr("checked")
+				$(obj).attr("checked", "checked");
 			},
 			getRouterData() {
 				this.username = sessionStorage.getItem('username') ? sessionStorage.getItem('username') : localStorage.getItem(
 					'username');
+				this.userId = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : localStorage.getItem(
+					'userId');
+				this.sessionToken = sessionStorage.getItem('sessionToken') ? sessionStorage.getItem('sessionToken') : localStorage.getItem(
+					'sessionToken');
 			},
 			init_upload: function () {
-				console.log("kaisi");
-				$("#deleteImgFile").on('click', function () {
-					console.log("delete");
-				})
+
 			},
 			uploadimages: function () {
 				var server = this.server;
@@ -147,6 +200,8 @@
 				var formFile = new FormData();
 				formFile.append("action", server + "/zuul/video/uploadFile");
 				formFile.append("uploadfile", fileObj); //加入文件对象
+
+				this.fileSize = fileObj.size;
 
 				console.log(fileObj);
 
@@ -162,6 +217,8 @@
 					formFile.append("attachName", attachNameImage);
 					formFile.append("tag", "img");
 				}
+				formFile.append("sessionToken", this.sessionToken);
+				formFile.append("userId", this.userId);
 				console.log(formFile);
 
 				var that = this;
@@ -205,7 +262,7 @@
 						$("#chooceImg").removeAttr("disabled");
 						$("#chooceImg").val("选择图片");
 						if (result.success) {
-							that.uploadFileshow = true;
+							that.uploadImgFileshow = true;
 							$("#uploadImgPath").val(result.uploadFileName);
 						} else {
 							layer.alert("上传缩略图失败！");
@@ -226,6 +283,7 @@
 				var layer = this.$layer;
 				var fileObj = document.getElementById("inputVideofile").files[0];
 				console.log(fileObj);
+				this.fileSize = fileObj.size;
 
 				let filename = fileObj.name;
 				let attachNameImage = filename.substring(filename.lastIndexOf("\\") + 1, filename.length);
@@ -243,6 +301,8 @@
 				var formFile = new FormData();
 				formFile.append("attachName", attachNameImage);
 				formFile.append("tag", "video");
+				formFile.append("sessionToken", this.sessionToken);
+				formFile.append("userId", this.userId);
 				$("#chooceVideo").attr({
 					disabled: "disabled"
 				})
@@ -256,6 +316,7 @@
 				var fileArray = this.$options.methods.cutFile(fileObj, setsize);
 				console.log(fileArray);
 				$("#video-progress").show(); //显示进度条
+				$("#video-progress-width").css("width", 0 + '%');
 				formFile.append("uploadfile", fileArray[0].file); //加入文件对象
 				formFile.append("count", 0);
 				formFile.append("name", fileArray[0].name);
@@ -268,10 +329,9 @@
 					formFile.append("isLast", "false");
 				}
 				formFile.append("total", lengthArray);
-				this.$options.methods.ajaxUploadLargeFile(1, formFile, lengthArray, server, layer, this, fileArray);
+				this.$options.methods.ajaxUploadLargeFile(1, formFile, lengthArray, server, layer, this, fileArray, this.isShowUploadVideo);
 			},
-			ajaxUploadLargeFile: function (count, formFile, totle, server, layer, that, fileArray) {
-				console.log(count);
+			ajaxUploadLargeFile: function (count, formFile, totle, server, layer, that, fileArray, isShowUploadVideo) {
 				var percentComplete = Math.round((count * 100) / totle);
 				$.ajax({
 					url: server + "/zuul/video/uploadFile",
@@ -286,26 +346,49 @@
 						//$("#video-progress").show();
 					},
 					complete: function () {
-						$("#video-progress-width").css("width", percentComplete + '%');
-						if (count == totle) { //最后一个文件
-							$("#video-progress").hide();
-							$("#chooceVideo").removeAttr("disabled");
-							$("#chooceVideo").val("选择视频");
+						if (isShowUploadVideo) { //上传视频
+							$("#video-progress-width").css("width", percentComplete + '%');
+							if (count == totle) { //最后一个文件
+								$("#video-progress").hide();
+								$("#chooceVideo").removeAttr("disabled");
+								$("#chooceVideo").val("选择视频");
+							}
+						} else { //上传文件
+							$("#file-progress-width").css("width", percentComplete + '%');
+							if (count == totle) { //最后一个文件
+								$("#file-progress").hide();
+								$("#chooceFile").removeAttr("disabled");
+								$("#chooceFile").val("选择文件");
+							}
 						}
+
 					},
 					success: function (result) {
 						if (count == totle) {
-							$("#video-progress-width").css("width", 0 + '%');
-							if (result.success) {
-								that.uploadVideoFileshow = true;
-								$("#uploadVideoPath").val(result.uploadFileName);
+							if (isShowUploadVideo) {
+								$("#video-progress-width").css("width", 0 + '%');
+								if (result.success) {
+									that.uploadVideoFileshow = true;
+									$("#uploadVideoPath").val(result.uploadFileName);
+								} else {
+									layer.alert(result.error);
+								}
 							} else {
-								layer.alert(result.error);
+								$("#file-progress-width").css("width", 0 + '%');
+								if (result.success) {
+									that.uploadFileshow = true;
+									$("#uploadFilePath").val(result.uploadFileName);
+								} else {
+									layer.alert(result.error);
+								}
 							}
+
 						} else {
 							formFile.set("uploadfile", fileArray[count].file);
 							formFile.set("count", count);
 							formFile.set("name", fileArray[count].name);
+							formFile.append("sessionToken", that.sessionToken);
+							formFile.append("userId", that.userId);
 							if (count == totle - 1) {
 								formFile.set("isLast", "true");
 							} else {
@@ -315,13 +398,96 @@
 						}
 					},
 					error: function () {
-						$("#video-progress").hide();
-						$("#chooceVideo").removeAttr("disabled");
-						$("#chooceVideo").val("选择视频");
-						layer.alert("上传视频失败!");
+						if (isShowUploadVideo) {
+							$("#video-progress").hide();
+							$("#chooceVideo").removeAttr("disabled");
+							$("#chooceVideo").val("选择视频");
+							layer.alert("上传视频失败!");
+						} else {
+							$("#file-progress").hide();
+							$("#chooceFile").removeAttr("disabled");
+							$("#chooceFile").val("选择文件");
+							layer.alert("上传文件失败!");
+						}
+
 						return false;
 					}
 				})
+			},
+			uploadFiles: function () {
+				var server = this.server;
+				var layer = this.$layer;
+				var fileObj = document.getElementById("inputfile").files[0];
+				this.fileSize = fileObj.size;
+
+				let filename = fileObj.name;
+				this.attachNameFile = filename;
+				if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+					layer.alert("请选择文件");
+					return;
+				}
+
+				var formFile = new FormData();
+				formFile.append("attachName", filename);
+				formFile.append("tag", "file");
+				$("#chooceFile").attr({
+					disabled: "disabled"
+				})
+				$("#chooceFile").val("正在上传文件...");
+
+				//将文件切片
+				var filesize = fileObj.size;
+				var setsize = 1024 * 1024 * 1; //10M
+				//var filecount = Math.ceil(filesize / setsize);
+
+				var fileArray = this.$options.methods.cutFile(fileObj, setsize);
+				$("#file-progress").show(); //显示进度条
+				$("#file-progress-width").css("width", 0 + '%');
+				formFile.append("uploadfile", fileArray[0].file); //加入文件对象
+				formFile.append("count", 0);
+				formFile.append("name", fileArray[0].name);
+				formFile.append("sessionToken", this.sessionToken);
+				formFile.append("userId", this.userId);
+
+				var lengthArray = fileArray.length;
+				if (lengthArray == 1) {
+					formFile.append("isLast", "true");
+				} else {
+					formFile.append("isLast", "false");
+				}
+				formFile.append("total", lengthArray);
+				this.$options.methods.ajaxUploadLargeFile(1, formFile, lengthArray, server, layer, this, fileArray, this.isShowUploadVideo);
+			},
+			submitUpload: function () {
+				var server = this.server;
+				var data = $("#uploadFileForm").serializeArray();
+				var fromData = {};
+				$.each(data, function () {
+					fromData[this.name] = this.value;
+				});
+				fromData.filename = this.attachNameFile;
+				fromData.fileSize = (this.fileSize / (1024 * 1024)).toFixed(2); //M
+				fromData.userId = this.userId;
+				fromData.sessionToken = this.sessionToken;
+				var datas = JSON.parse(JSON.stringify(fromData));
+				var layer = this.$layer;
+
+				console.log(datas);
+				$.ajax({
+					type: "post",
+					url: server + "/video/saveFile",
+					data: datas,
+					contentType: "application/x-www-form-urlencoded",
+					//contentType: "application/json;charset=utf-8",
+					success: function (data) {
+						if (data.success) {
+							parent.location.reload();
+						} else {
+							layer.msg(data.msg);
+						}
+					},
+				})
+
 			},
 			submitUploadFile: function () {
 				var server = this.server;
@@ -343,12 +509,14 @@
 					this.$layer.alert("主题名称太长");
 					return;
 				}
-				
-				var isownVal=$('input:radio[name="isown"]:checked').val();
-				fromData.isown = isownVal;
 
+				fromData.userId = this.userId;
+				var isownVal = $('input:radio[name="isown"]:checked').val();
+				fromData.isown = isownVal;
+				fromData.fileSize = (this.fileSize / (1024 * 1024)).toFixed(2); //M
+
+				fromData.sessionToken = this.sessionToken;
 				var datas = JSON.parse(JSON.stringify(fromData));
-				console.log(datas);
 				var layer = this.$layer;
 				$.ajax({
 					type: "post",
@@ -386,25 +554,44 @@
 			deleteAttach: function (type) {
 				var server = this.server;
 				var layer = this.$layer;
-				var attachName = type == "img" ? $("#uploadImgPath").val() : $("#uploadVideoPath").val();
+
+				//var attachName = type == "img" ? $("#uploadImgPath").val() : $("#uploadVideoPath").val();
+				var attachName;
+				if (type == "img") {
+					attachName = $("#uploadImgPath").val();
+				} else if (type == "video") {
+					attachName = $("#uploadVideoPath").val();
+				} else if (type == "file") {
+					attachName = $("#uploadFilePath").val();
+				}
+				console.log(attachName);
 				var tag = type;
+				var that = this;
 				$.ajax({
 					type: "post",
 					url: server + '/video/deleteFile',
 					data: {
 						'attachName': attachName,
-						'tag': tag
+						'tag': tag,
+						"sessionToken": that.sessionToken,
+						"userId": that.userId,
 					},
 					contentType: "application/x-www-form-urlencoded",
 					//contentType: "application/json;charset=utf-8",
 					success: function (data) {
 						if (data.success) {
 							if (type == "img") {
-								$("#uploadFile").empty();
+								//$("#uploadFile").empty();
+								that.uploadImgFileshow = false;
 								$("#uploadImgPath").val('');
-							} else {
-								$("#uploadVideoFile").empty();
+							} else if (type == "video") {
+								//$("#uploadVideoFile").empty();
+								that.uploadVideoFileshow = false;
 								$("#uploadVideoPath").val('');
+							} else {
+								//$("#isUploadFile").empty();
+								that.uploadFileshow = false;
+								$("#uploadFilePath").val('');
 							}
 
 						} else {

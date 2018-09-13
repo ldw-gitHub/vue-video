@@ -81,6 +81,7 @@
 			return {
 				ftpIP: this.GLOBAL.ftpIP,
 				server: this.GLOBAL.server,
+				sessionToken: this.GLOBAL.sessionToken,
 				username: {},
 				videoId: {},
 				userId: {},
@@ -114,6 +115,8 @@
 			}
 		},
 		created() {
+			this.sessionToken =  sessionStorage.getItem('sessionToken') ? sessionStorage.getItem('sessionToken') : localStorage.getItem(
+					'sessionToken');
 			this.getRouterData();
 			this.getVideoById(this.videoId);
 			this.initComment(this);
@@ -148,7 +151,8 @@
 						"videoId": videoId,
 						"comments": commentValues,
 						"username": username,
-						"userId": userId
+						"userId": userId,
+						"sessionToken": that.sessionToken,
 					},
 					success: function (result) {
 						if (result.success) {
@@ -169,7 +173,7 @@
 					type: "get",
 					url: server + "/video/getVideoCommentsByid",
 					data: {
-						"videoId": videoId
+						"videoId": videoId,
 					},
 					success: function (result) {
 						result = JSON.parse(result);
@@ -201,7 +205,7 @@
 					type: "get",
 					url: server + "/video/findVideosById",
 					data: {
-						"videoId": videoid
+						"videoId": videoid,
 					},
 					success: function (result) {
 						result = JSON.parse(result);

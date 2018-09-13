@@ -51,6 +51,7 @@
 			return {
 				ftpIP: this.GLOBAL.ftpIP,
 				server: this.GLOBAL.server,
+				sessionToken: this.GLOBAL.sessionToken,
 				username: "",
 				userId: "",
 				myMoviesTmp: {},
@@ -69,6 +70,8 @@
 					'username');
 				this.userId = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : localStorage.getItem(
 					'userId');
+			    this.sessionToken =  sessionStorage.getItem('sessionToken') ? sessionStorage.getItem('sessionToken') : localStorage.getItem(
+			    		'sessionToken');
 			},
 			pagechange: function (currentPage) {
 				let userId = this.userId;
@@ -82,6 +85,7 @@
 						"userId": userId,
 						"pageSize": that.pageSize,
 						"currentPage": currentPage,
+						"sessionToken": that.sessionToken,
 					},
 					success: function (result) {
 						result = JSON.parse(result);

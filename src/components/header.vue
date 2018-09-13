@@ -9,6 +9,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
 				</button>
 				<a href="#" class="navbar-brand" v-on:click="relationClick(0)">
 					<strong>VideoHome</strong>
@@ -34,7 +35,7 @@
 							</li>
 						</ul> -->
 					</li>
-					<li class="col-md-offset-4">
+					<li class="col-md-offset-2">
 						<form class="navbar-form navbar-left" role="search">
 							<div class="form-group">
 								<input type="text" class="form-control searchclass" placeholder="search">
@@ -88,9 +89,12 @@
 				relations: [{
 						title: '首页',
 						id: 'index'
+					},{
+						title: '我的文件',
+						id: 'myfileresource'
 					},
 					{
-						title: '我的资源',
+						title: '我的视频',
 						id: 'myresource'
 					},
 					{
@@ -130,7 +134,7 @@
 			relationClick(id) {
 				if (this.relations[id].id != "") {
 					//限制需要登入的模块
-					if ((this.relations[id].id == 'upload' || this.relations[id].id == 'myresource') &&
+					if ((this.relations[id].id == 'upload' || this.relations[id].id == 'myresource' || this.relations[id].id == 'myfileresource') &&
 						(this.username == '' || this.username == null)
 					) {
 						this.$layer.msg("需要登入访问");
@@ -150,6 +154,8 @@
 			logout: function () {
 				var routers = this.$router;
 				var server = this.server;
+				var userId = this.userId;
+				var that = this;
 				var sessionToken = sessionStorage.getItem('sessionToken');
 				if (sessionToken == null || sessionToken == "") {
 					sessionToken = localStorage.getItem('sessionToken');
@@ -164,12 +170,14 @@
 					url: server + '/video/logout',
 					data: {
 						'sessionToken': sessionToken,
+						'userId':userId,
 					},
 					success: function (data) {
 						sessionStorage.removeItem('sessionToken');
 						localStorage.removeItem("sessionToken");
 						sessionStorage.removeItem('username');
 						localStorage.removeItem("username");
+						that.GLOBAL.sessionToken = "";
 						routers.push({
 							name: "login",
 						})

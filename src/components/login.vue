@@ -41,7 +41,6 @@
 		mounted() {
 			window.onresize = function temp() {
 				this.clientWidths = document.body.clientWidth;
-				console.log(this.clientWidths);
 			};
 		},
 		created() {
@@ -68,7 +67,7 @@
 				var remFlag = $("#remember").is(":checked");
 				var server = this.server;
 				var layer = this.$layer;
-				console.log(remFlag);
+				var that = this;
 
 				// 禁用按钮防止重复提交
 				/* $("#loginbut").attr({
@@ -103,6 +102,7 @@
 									sessionStorage.setItem("username", data.user.username);
 									sessionStorage.setItem("userId", data.user.id);
 								}
+								that.GLOBAL.sessionToken = data.accessToken;
 								routers.push({
 									name: 'index',
 								})
