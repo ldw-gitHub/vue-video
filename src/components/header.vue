@@ -89,7 +89,7 @@
 				relations: [{
 						title: '首页',
 						id: 'index'
-					},{
+					}, {
 						title: '我的文件',
 						id: 'myfileresource'
 					},
@@ -134,7 +134,8 @@
 			relationClick(id) {
 				if (this.relations[id].id != "") {
 					//限制需要登入的模块
-					if ((this.relations[id].id == 'upload' || this.relations[id].id == 'myresource' || this.relations[id].id == 'myfileresource') &&
+					if ((this.relations[id].id == 'upload' || this.relations[id].id == 'myresource' || this.relations[id].id ==
+							'myfileresource') &&
 						(this.username == '' || this.username == null)
 					) {
 						this.$layer.msg("需要登入访问");
@@ -170,17 +171,25 @@
 					url: server + '/video/logout',
 					data: {
 						'sessionToken': sessionToken,
-						'userId':userId,
+						'userId': userId,
 					},
 					success: function (data) {
-						sessionStorage.removeItem('sessionToken');
-						localStorage.removeItem("sessionToken");
-						sessionStorage.removeItem('username');
-						localStorage.removeItem("username");
-						that.GLOBAL.sessionToken = "";
-						routers.push({
-							name: "login",
-						})
+						if (data.success) {
+							sessionStorage.removeItem('sessionToken');
+							localStorage.removeItem("sessionToken");
+							sessionStorage.removeItem('username');
+							localStorage.removeItem("username");
+							sessionStorage.removeItem('userId');
+							localStorage.removeItem("userId");
+							that.GLOBAL.sessionToken = "";
+							routers.push({
+								name: "login",
+							})
+						} else {
+							if (result.msg == "0002") {
+								that.expireLogin();
+							}
+						}
 					}
 
 				});
@@ -214,7 +223,8 @@
 		left: 0;
 		right: 0;
 	}
-	.searchclass{
+
+	.searchclass {
 		width: 200px;
 		height: 30px;
 		font-size: 12px;

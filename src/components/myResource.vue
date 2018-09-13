@@ -92,6 +92,10 @@
 						if (result.success) {
 							that.myMoviesTmp = result.data;
 							that.total = result.pages;
+						}else{
+							if(result.msg == "0002"){
+								that.expireLogin();
+							}
 						}
 					}
 				})

@@ -482,8 +482,10 @@
 					success: function (data) {
 						if (data.success) {
 							parent.location.reload();
-						} else {
-							layer.msg(data.msg);
+						} else{
+							if(data.msg == "0002"){
+								that.expireLogin();
+							}
 						}
 					},
 				})
@@ -529,8 +531,10 @@
 							parent.location.reload();
 							$("#description").val("");
 							$("#filename").val("");
-						} else {
-							layer.msg(data.msg);
+						} else{
+							if(data.msg == "0002"){
+								that.expireLogin();
+							}
 						}
 					},
 				})
@@ -594,8 +598,10 @@
 								$("#uploadFilePath").val('');
 							}
 
-						} else {
-							layer.msg(data.msg);
+						} else{
+							if(data.msg == "0002"){
+								that.expireLogin();
+							}
 						}
 					}
 

@@ -158,6 +158,10 @@
 						if (result.success) {
 							that.$options.methods.initComment(that); //刷新评论
 							$("#commentvalue").val("");
+						}else{
+							if(result.msg == "0002"){
+								that.expireLogin();
+							}
 						}
 					}
 				})

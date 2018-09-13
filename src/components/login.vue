@@ -45,7 +45,6 @@
 		},
 		created() {
 			this.clientWidths = document.body.clientWidth;
-			console.log(this.clientWidths);
 		},
 		methods: {
 			returnindex: function () {

@@ -17,6 +17,19 @@ Vue.prototype.$layer = layer(Vue);
 
 Vue.config.productionTip = false // 关闭生产模式下给出的提示
 
+Vue.prototype.expireLogin = function () {
+	sessionStorage.removeItem('sessionToken');
+	localStorage.removeItem("sessionToken");
+	sessionStorage.removeItem('username');
+	localStorage.removeItem("username");
+	sessionStorage.removeItem('userId');
+	localStorage.removeItem("userId");
+	this.GLOBAL.sessionToken = "";
+	this.$router.push({
+		name: "index",
+	})
+}
+
 router.beforeEach((to, from, next) => {
 	if (to.matched.some(record => record.meta.requiresAuth)) {
 		if (to.path == "/") {
@@ -38,7 +51,7 @@ router.beforeEach((to, from, next) => {
 		} else {
 			next()
 		}
-	}else{
+	} else {
 		next()
 	}
 })
