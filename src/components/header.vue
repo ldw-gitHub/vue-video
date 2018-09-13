@@ -174,22 +174,8 @@
 						'userId': userId,
 					},
 					success: function (data) {
-						if (data.success) {
-							sessionStorage.removeItem('sessionToken');
-							localStorage.removeItem("sessionToken");
-							sessionStorage.removeItem('username');
-							localStorage.removeItem("username");
-							sessionStorage.removeItem('userId');
-							localStorage.removeItem("userId");
-							that.GLOBAL.sessionToken = "";
-							routers.push({
-								name: "login",
-							})
-						} else {
-							if (result.msg == "0002") {
-								that.expireLogin();
-							}
-						}
+						that.username = "";
+						that.expireLogin();
 					}
 
 				});
