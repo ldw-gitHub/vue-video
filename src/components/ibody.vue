@@ -4,7 +4,7 @@
 			<div class="panel-heading">
 				<h4 class="panel-title">
 					<span>{{movieTitle[0]}}</span>
-					<span class="glyphicon glyphicon-send showMore" title="moreMovie" v-on:click="showMoreMovies(movieType[1],movieTitle[1])"></span>
+					<span class="glyphicon glyphicon-send showMore" title="moreMovie" v-on:click="showMoreMovies(movieType[1],movieTitle[0])"></span>
 				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
@@ -26,7 +26,7 @@
 			<div class="panel-heading">
 				<h4 class="panel-title">
 					<span>{{movieTitle[1]}}</span>
-					<span class="glyphicon glyphicon-send showMore" title="moreMovie" v-on:click="showMoreMovies(movieType[0],movieTitle[0])"></span>
+					<span class="glyphicon glyphicon-send showMore" title="moreMovie" v-on:click="showMoreMovies(movieType[0],movieTitle[1])"></span>
 				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">

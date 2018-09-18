@@ -310,7 +310,7 @@
 
 				//将文件切片
 				var filesize = fileObj.size;
-				var setsize = 1024 * 1024 * 1; //10M
+				var setsize = 1024 * 1024 * 5; //10M
 				//var filecount = Math.ceil(filesize / setsize);
 
 				var fileArray = this.$options.methods.cutFile(fileObj, setsize);
@@ -321,7 +321,6 @@
 				formFile.append("count", 0);
 				formFile.append("name", fileArray[0].name);
 
-				console.log(formFile);
 				var lengthArray = fileArray.length;
 				if (lengthArray == 1) {
 					formFile.append("isLast", "true");
@@ -394,7 +393,7 @@
 							} else {
 								formFile.set("isLast", "false");
 							}
-							that.$options.methods.ajaxUploadLargeFile(++count, formFile, totle, server, layer, that, fileArray);
+							that.$options.methods.ajaxUploadLargeFile(++count, formFile, totle, server, layer, that, fileArray,isShowUploadVideo);
 						}
 					},
 					error: function () {
