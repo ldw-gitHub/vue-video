@@ -47,7 +47,8 @@ exports.cssLoaders = function (options) {
     if (options.extract) {
       return ExtractTextPlugin.extract({
         use: loaders,
-        fallback: 'vue-style-loader'
+        fallback: 'vue-style-loader',
+				publicPath: '../../',//ExtractTextPlugin抽离css文件时没有转换资源引入路径，导致app.css引入了相对app.css目录为"static/img/ .png"的静态资源
       })
     } else {
       return ['vue-style-loader'].concat(loaders)
