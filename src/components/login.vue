@@ -16,10 +16,13 @@
 				</div>
 			</div>
 			<div class="row">
-				<button type="button" id="loginbut" class="btn btn-default" @click="login">login</button>
-				<button type="button" class="btn btn-default" v-on:click="returnindex">index</button>
-				<input type="checkbox" style="margin-left: 20px;margin-top: 10px;" name="remember" id="remember" value="0" />记住我
+				<label class='col-md-2 col-md-offset-3' style="padding-right: 0;cursor:pointer;" v-on:click="returnindex">return VTime</label>
+				<button type="button" id="loginbut" class="btn btn-default col-xs-8 col-xs-offset-2 col-md-2 col-md-offset-0" @click="login">登入</button>
+				<!-- <input type="checkbox" style="margin-left: 20px;margin-top: 10px;" name="remember" id="remember" value="0" />记住我 -->
 			</div>
+			<!-- <div class="row">
+				<button type="button" class="btn btn-default col-xs-8 col-xs-offset-5 col-md-2" style="padding:0;" v-on:click="returnindex">返回首页</button> 
+			</div> -->
 		</div>
 	</div>
 
@@ -33,7 +36,7 @@
 			return {
 				ftpIP: this.GLOBAL.ftpIP,
 				server: this.GLOBAL.server,
-				coverImgUrl: 'bk/timg1.jpg',
+				coverImgUrl: 'bk/timg.jpg',
 				baseImg: 'bk/girl.jpg',
 				clientWidths: '',
 			}
@@ -55,12 +58,12 @@
 			login: function () {
 				var routers = this.$router;
 
-				if ((sessionStorage.getItem('sessionToken') || localStorage.getItem('sessionToken')) &&
+			/* 	if ((sessionStorage.getItem('sessionToken') || localStorage.getItem('sessionToken')) &&
 					(sessionStorage.getItem('username') || localStorage.getItem('username'))) {
 					routers.push({
 						name: 'index',
 					})
-				}
+				} */
 				var username = $("#username").val();
 				var password = $("#password").val();
 				var remFlag = $("#remember").is(":checked");
@@ -92,7 +95,7 @@
 							data = JSON.parse(data);
 							if (data.msg == '0001') {
 								//记住密码
-								if (remFlag) {
+							/* 	if (remFlag) {
 									localStorage.setItem("sessionToken", data.accessToken);
 									localStorage.setItem("username", data.user.username);
 									localStorage.setItem("userId", data.user.id);
@@ -100,7 +103,10 @@
 									sessionStorage.setItem('sessionToken', data.accessToken);
 									sessionStorage.setItem("username", data.user.username);
 									sessionStorage.setItem("userId", data.user.id);
-								}
+								} */
+								that.setCookie("username",data.user.username,1);
+								that.setCookie("userId",data.user.id,1);
+								that.setCookie("sessionToken",data.accessToken,1);
 								that.GLOBAL.sessionToken = data.accessToken;
 								routers.push({
 									name: 'index',

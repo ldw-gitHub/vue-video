@@ -71,12 +71,15 @@
 		},
 		methods: {
 			initData() {
-				this.username = sessionStorage.getItem('username') ? sessionStorage.getItem('username') : localStorage.getItem(
+				/* this.username = sessionStorage.getItem('username') ? sessionStorage.getItem('username') : localStorage.getItem(
 					'username');
 				this.userId = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : localStorage.getItem(
 					'userId');
 				this.sessionToken =  sessionStorage.getItem('sessionToken') ? sessionStorage.getItem('sessionToken') : localStorage.getItem(
-						'sessionToken');
+						'sessionToken'); */
+				this.username = this.getCookie("username");
+				this.userId = this.getCookie("userId");
+				this.sessionToken = this.getCookie("sessionToken");
 			},
 			pagechange: function (currentPage) {
 				let userId = this.userId;

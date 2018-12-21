@@ -12,7 +12,7 @@
 					<span class="icon-bar"></span>
 				</button>
 				<a href="#" class="navbar-brand" v-on:click="relationClick(0)">
-					<strong>VideoHome</strong>
+					<strong style="font-size: 25px;">沐<span style="font-size: 15px;">沐视频</span></strong>
 				</a>
 			</div>
 			<div class="collapse navbar-collapse" id="video-navbar-collapse">
@@ -34,14 +34,6 @@
 								</ul> 
 							</li>
 						</ul> -->
-					</li>
-					<li class="col-md-offset-2">
-						<form class="navbar-form navbar-left" role="search">
-							<div class="form-group">
-								<input type="text" class="form-control searchclass" placeholder="search">
-							</div>
-							<button type="submit" class="btn btn-sm" style="background-color: #649ddc;">Search</button>
-						</form>
 					</li>
 					<li v-if="username != '' && username != null" class="nav navbar-nav navbar-right" style="margin-left:15px;">
 						<ul class="nav navbar-nav">
@@ -78,7 +70,16 @@
 			</div>
 
 		</div>
+		<div class="container"> 
+		   	<form class="navbar-form" role="search">
+		   		<div class="form-group col-md-offset-3 col-md-4">
+		   			<input type="text" class="form-control searchclass" placeholder="输入关键字">
+		   		</div>
+		   		<button type="submit" class="btn btn-sm" style="background-color: #649ddc;">搜索</button>
+		   	</form>
+		</div>
 	</nav>
+	
 
 </template>
 
@@ -147,20 +148,23 @@
 				}
 			},
 			initData: function () {
-				this.username = sessionStorage.getItem('username') ? sessionStorage.getItem('username') : localStorage.getItem(
+			/* 	this.username = sessionStorage.getItem('username') ? sessionStorage.getItem('username') : localStorage.getItem(
 					'username');
 				this.userId = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : localStorage.getItem(
-					'userId');
+					'userId'); */
+					this.username = this.getCookie("username");
+					this.userId = this.getCookie("userId");
 			},
 			logout: function () {
 				var routers = this.$router;
 				var server = this.server;
 				var userId = this.userId;
 				var that = this;
-				var sessionToken = sessionStorage.getItem('sessionToken');
+				/* var sessionToken = sessionStorage.getItem('sessionToken');
 				if (sessionToken == null || sessionToken == "") {
 					sessionToken = localStorage.getItem('sessionToken');
-				}
+				} */
+				var sessionToken = this.getCookie("sessionToken");
 				if (sessionToken == null || sessionToken == "") {
 					routers.push({
 						name: "login",
@@ -200,7 +204,7 @@
 	}
 
 	.titleClass {
-		background-color: #649ffb;
+		/* background-color: #649ffb; */
 		z-index: 1100;
 		color: black;
 		font-weight: bolder;
@@ -211,7 +215,7 @@
 	}
 
 	.searchclass {
-		width: 200px;
+		width: 330px;
 		height: 30px;
 		font-size: 12px;
 	}

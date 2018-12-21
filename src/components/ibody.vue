@@ -4,7 +4,7 @@
 			<div class="panel-heading">
 				<h4 class="panel-title">
 					<span>{{movieTitle[0]}}</span>
-					<span class="glyphicon glyphicon-send showMore" title="moreMovie" v-on:click="showMoreMovies(movieType[1],movieTitle[0])"></span>
+					<img alt="" src="../assets/img/more.png" class="showMore" v-on:click="showMoreMovies(movieType[1],movieTitle[0])"/>
 				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
@@ -26,7 +26,7 @@
 			<div class="panel-heading">
 				<h4 class="panel-title">
 					<span>{{movieTitle[1]}}</span>
-					<span class="glyphicon glyphicon-send showMore" title="moreMovie" v-on:click="showMoreMovies(movieType[0],movieTitle[1])"></span>
+					<img alt="" src="../assets/img/more.png" class="showMore" v-on:click="showMoreMovies(movieType[0],movieTitle[1])"/>
 				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
@@ -48,7 +48,7 @@
 			<div class="panel-heading">
 				<h4 class="panel-title">
 					<span>{{movieTitle[2]}}</span>
-					<span class="glyphicon glyphicon-send showMore" title="moreMovie" v-on:click="showMoreMovies(movieType[2],movieTitle[2])"></span>
+					<img alt="" src="../assets/img/more.png" class="showMore" v-on:click="showMoreMovies(movieType[2],movieTitle[2])"/>
 				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
@@ -70,7 +70,7 @@
 			<div class="panel-heading">
 				<h4 class="panel-title">
 					<span>{{movieTitle[3]}}</span>
-					<span class="glyphicon glyphicon-send showMore" title="moreMovie" v-on:click="showMoreMovies(movieType[3],movieTitle[3])"></span>
+					<img alt="" src="../assets/img/more.png" class="showMore" v-on:click="showMoreMovies(movieType[3],movieTitle[3])"/>
 				</h4>
 			</div>
 			<div class="panel-body" style="width: 100%; padding-top: 5px;">
@@ -258,5 +258,8 @@
 		font-size: 13px;
 		cursor: pointer;
 		color: #649ffb;
+		width: 18px;
 	}
+	
+	
 </style>
