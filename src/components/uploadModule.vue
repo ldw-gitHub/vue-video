@@ -178,12 +178,9 @@
 				$(obj).attr("checked", "checked");
 			},
 			getRouterData() {
-				this.username = sessionStorage.getItem('username') ? sessionStorage.getItem('username') : localStorage.getItem(
-					'username');
-				this.userId = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : localStorage.getItem(
-					'userId');
-				this.sessionToken = sessionStorage.getItem('sessionToken') ? sessionStorage.getItem('sessionToken') : localStorage.getItem(
-					'sessionToken');
+				this.username = this.getCookie("username");
+				this.userId = this.getCookie("userId");
+				this.sessionToken = this.getCookie("sessionToken");
 			},
 			init_upload: function () {
 
