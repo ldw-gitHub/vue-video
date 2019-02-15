@@ -433,7 +433,7 @@
 
 				//将文件切片
 				var filesize = fileObj.size;
-				var setsize = 1024 * 1024 * 1; //10M
+				var setsize = 1024 * 1024 * 20; //10M
 				//var filecount = Math.ceil(filesize / setsize);
 
 				var fileArray = this.$options.methods.cutFile(fileObj, setsize);
