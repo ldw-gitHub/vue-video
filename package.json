@@ -13,7 +13,8 @@
     "jquery": "^3.3.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "vue-simple-uploader": "^0.5.2"
+    "vue-simple-uploader": "^0.5.2",
+    "vue-video-player": "^5.0.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

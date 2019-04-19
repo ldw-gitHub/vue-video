@@ -57,24 +57,12 @@
 			},
 			login: function () {
 				var routers = this.$router;
-
-			/* 	if ((sessionStorage.getItem('sessionToken') || localStorage.getItem('sessionToken')) &&
-					(sessionStorage.getItem('username') || localStorage.getItem('username'))) {
-					routers.push({
-						name: 'index',
-					})
-				} */
 				var username = $("#username").val();
 				var password = $("#password").val();
 				var remFlag = $("#remember").is(":checked");
 				var server = this.server;
 				var layer = this.$layer;
 				var that = this;
-
-				// 禁用按钮防止重复提交
-				/* $("#loginbut").attr({
-					disabled: "disabled"
-				}); */
 
 				if (username == "" || username == null) {
 					this.$layer.msg("用户名为空");
@@ -83,36 +71,30 @@
 				} else {
 					$.ajax({
 						type: 'post',
-						url: server + '/video/login',
+						url: server + '/login',
 						data: {
 							'username': username,
 							'password': password,
 							'remenberme': 0,
 						},
 						success: function (data) {
-							//console.log($.cookie('sessionId'));
-							/* $("#loginbut").removeAttr("disabled"); */
 							data = JSON.parse(data);
-							if (data.msg == '0001') {
+							if (data.code == 200) {
 								//记住密码
-							/* 	if (remFlag) {
-									localStorage.setItem("sessionToken", data.accessToken);
-									localStorage.setItem("username", data.user.username);
-									localStorage.setItem("userId", data.user.id);
-								} else {
-									sessionStorage.setItem('sessionToken', data.accessToken);
-									sessionStorage.setItem("username", data.user.username);
-									sessionStorage.setItem("userId", data.user.id);
-								} */
-								that.setCookie("username",data.user.username,1);
-								that.setCookie("userId",data.user.id,1);
-								that.setCookie("sessionToken",data.accessToken,1);
-								that.GLOBAL.sessionToken = data.accessToken;
+								that.setCookie("username",data.data.userName,1);
+								that.setCookie("userId",data.data.userId,1);
 								routers.push({
 									name: 'index',
 								})
 							} else {
-								layer.msg(data.msg);
+								layer.msg(data.message);
+							}
+						},
+						complete: function(xhr,data){
+							if (data == "success") {
+								//记住密码
+								that.setCookie("sessionToken",xhr.getResponseHeader("Authorization"),1);
+								that.GLOBAL.sessionToken = data.accessToken;
 							}
 						}
 

@@ -172,9 +172,11 @@
 				}
 				$.ajax({
 					type: 'post',
-					url: server + '/video/logout',
+					url: server + '/logout',
+					beforeSend: function(XMLHttpRequest) {
+						XMLHttpRequest.setRequestHeader("Authorization", that.sessionToken);
+					},
 					data: {
-						'sessionToken': sessionToken,
 						'userId': userId,
 					},
 					success: function (data) {

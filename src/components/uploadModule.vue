@@ -258,11 +258,16 @@
 						$("#image-progress").hide();
 						$("#chooceImg").removeAttr("disabled");
 						$("#chooceImg").val("选择图片");
-						if (result.success) {
+						
+						console.log(result.data.uploadFileName);
+						if (result.code == 200) {
 							that.uploadImgFileshow = true;
-							$("#uploadImgPath").val(result.uploadFileName);
-						} else {
-							layer.alert("上传缩略图失败！");
+							$("#uploadImgPath").val(result.data.uploadFileName);
+						}else{
+							if(result.code == 402){
+								that.expireLogin();
+							}
+							alert(result.message);
 						}
 					},
 					error: function () {
@@ -298,7 +303,6 @@
 				var formFile = new FormData();
 				formFile.append("attachName", attachNameImage);
 				formFile.append("tag", "video");
-				formFile.append("sessionToken", this.sessionToken);
 				formFile.append("userId", this.userId);
 				$("#chooceVideo").attr({
 					disabled: "disabled"
@@ -363,19 +367,25 @@
 						if (count == totle) {
 							if (isShowUploadVideo) {
 								$("#video-progress-width").css("width", 0 + '%');
-								if (result.success) {
+								if (result.code == 200) {
 									that.uploadVideoFileshow = true;
 									$("#uploadVideoPath").val(result.uploadFileName);
-								} else {
-									layer.alert(result.error);
+								}else{
+									if(result.code == 402){
+										that.expireLogin();
+									}
+									alert(result.message);
 								}
 							} else {
 								$("#file-progress-width").css("width", 0 + '%');
-								if (result.success) {
+								if (result.code == 200) {
 									that.uploadFileshow = true;
 									$("#uploadFilePath").val(result.uploadFileName);
-								} else {
-									layer.alert(result.error);
+								}else{
+									if(result.code == 402){
+										that.expireLogin();
+									}
+									alert(result.message);
 								}
 							}
 
@@ -464,7 +474,6 @@
 				fromData.filename = this.attachNameFile;
 				fromData.fileSize = (this.fileSize / (1024 * 1024)).toFixed(2); //M
 				fromData.userId = this.userId;
-				fromData.sessionToken = this.sessionToken;
 				var datas = JSON.parse(JSON.stringify(fromData));
 				var layer = this.$layer;
 
@@ -475,13 +484,15 @@
 					data: datas,
 					contentType: "application/x-www-form-urlencoded",
 					//contentType: "application/json;charset=utf-8",
-					success: function (data) {
-						if (data.success) {
+					success: function (result) {
+						if (result.code == 200) {
 							parent.location.reload();
-						} else{
-							if(data.msg == "0002"){
+						}else{
+							result = JSON.parse(result);
+							if(result.code == 402){
 								that.expireLogin();
 							}
+							layer.msg(result.message);
 						}
 					},
 				})
@@ -516,21 +527,28 @@
 				fromData.sessionToken = this.sessionToken;
 				var datas = JSON.parse(JSON.stringify(fromData));
 				var layer = this.$layer;
+				var sessionToken = this.sessionToken;
+				
 				$.ajax({
 					type: "post",
 					url: server + "/video/saveMedia",
+					beforeSend: function(XMLHttpRequest) {
+						XMLHttpRequest.setRequestHeader("Authorization",sessionToken);
+					}, 
 					data: datas,
 					contentType: "application/x-www-form-urlencoded",
 					//contentType: "application/json;charset=utf-8",
-					success: function (data) {
-						if (data.success) {
+					success: function (result) {
+						if (result.code == 200) {
 							parent.location.reload();
 							$("#description").val("");
 							$("#filename").val("");
-						} else{
-							if(data.msg == "0002"){
+						}else{
+							result = JSON.parse(result);
+							if(result.code == 402){
 								that.expireLogin();
 							}
+							layer.msg(result.message);
 						}
 					},
 				})
@@ -564,22 +582,24 @@
 				} else if (type == "file") {
 					attachName = $("#uploadFilePath").val();
 				}
-				console.log(attachName);
 				var tag = type;
 				var that = this;
+				var sessionToken = that.sessionToken;
 				$.ajax({
 					type: "post",
 					url: server + '/video/deleteFile',
 					data: {
 						'attachName': attachName,
 						'tag': tag,
-						"sessionToken": that.sessionToken,
 						"userId": that.userId,
+					},
+					beforeSend: function(XMLHttpRequest) {
+						XMLHttpRequest.setRequestHeader("Authorization",sessionToken);
 					},
 					contentType: "application/x-www-form-urlencoded",
 					//contentType: "application/json;charset=utf-8",
-					success: function (data) {
-						if (data.success) {
+					success: function (result) {
+						if (result.code == 200) {
 							if (type == "img") {
 								//$("#uploadFile").empty();
 								that.uploadImgFileshow = false;
@@ -593,11 +613,12 @@
 								that.uploadFileshow = false;
 								$("#uploadFilePath").val('');
 							}
-
-						} else{
-							if(data.msg == "0002"){
+						}else{
+							result = JSON.parse(result);
+							if(result.code == 402){
 								that.expireLogin();
 							}
+							that.$layer.msg(result.message);
 						}
 					}
 

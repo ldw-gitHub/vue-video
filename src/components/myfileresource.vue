@@ -85,26 +85,40 @@
 				let userId = this.userId;
 				let server = this.server;
 				var that = this;
+				var sessionToken = that.sessionToken;
 
 				$.ajax({
-					type: "get",
+				/* 	headers: {
+						"test":"1",
+						"Authorization":sessionToken
+					}, */
+					type: 'post',
 					url: server + "/video/getFilesByUserId",
+					beforeSend: function(XMLHttpRequest) {
+						XMLHttpRequest.setRequestHeader("Authorization",sessionToken);
+					}, 
 					data: {
 						"userId": userId,
 						"pageSize": that.pageSize,
 						"currentPage": currentPage,
-						"sessionToken": that.sessionToken,
 					},
 					success: function (result) {
-						result = JSON.parse(result);
-						if (result.success) {
-							that.myFilesResource = result.data;
-							that.total = result.pages;
-						}else{
-							if(result.msg == "0002"){
-								that.expireLogin();
+						try{
+							if (result.code == 200) {
+								that.myFilesResource = result.data.items;
+								that.total = result.data.totalPages;
+							}else{
+								result = JSON.parse(result);
+								if(result.code == 402){
+									that.expireLogin();
+								}
+								that.$layer.msg(result.message);
 							}
+							
+						}catch(e){
+							console.log(e.message);
 						}
+						
 					}
 				})
 			},

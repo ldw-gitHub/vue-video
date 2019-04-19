@@ -66,12 +66,6 @@
 		},
 		methods: {
 			initData() {
-				/* this.username = sessionStorage.getItem('username') ? sessionStorage.getItem('username') : localStorage.getItem(
-					'username');
-				this.userId = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : localStorage.getItem(
-					'userId');
-			    this.sessionToken =  sessionStorage.getItem('sessionToken') ? sessionStorage.getItem('sessionToken') : localStorage.getItem(
-			    		'sessionToken'); */
 				this.username = this.getCookie("username");
 				this.userId = this.getCookie("userId");
 				this.sessionToken = this.getCookie("sessionToken");
@@ -80,25 +74,29 @@
 				let userId = this.userId;
 				let server = this.server;
 				var that = this;
-
+                var sessionToken = that.sessionToken;
+				
 				$.ajax({
-					type: "get",
+					type: 'post',
 					url: server + "/video/findMyOwnVideos",
+					beforeSend: function(XMLHttpRequest) {
+						XMLHttpRequest.setRequestHeader("Authorization",sessionToken);
+					}, 
 					data: {
 						"userId": userId,
 						"pageSize": that.pageSize,
 						"currentPage": currentPage,
-						"sessionToken": that.sessionToken,
 					},
 					success: function (result) {
-						result = JSON.parse(result);
-						if (result.success) {
-							that.myMoviesTmp = result.data;
-							that.total = result.pages;
+						if (result.code == 200) {
+							that.myMoviesTmp = result.data.items;
+							that.total = result.data.totalPages;
 						}else{
-							if(result.msg == "0002"){
+							result = JSON.parse(result);
+							if(result.code == 402){
 								that.expireLogin();
 							}
+							that.$layer.msg(result.message);
 						}
 					}
 				})

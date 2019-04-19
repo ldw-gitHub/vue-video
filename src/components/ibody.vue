@@ -140,8 +140,8 @@
 						"videoType": type
 					},
 					success: function (result) {
-						result = JSON.parse(result);
-						if (result.success) {
+						
+						if (result.code == 200) {
 							var tmp = result.data;
 							if (target == "actionMovieTmps") {
 								that.actionMovieTmps = tmp;
@@ -152,7 +152,14 @@
 							} else if (target == "ThrillerMovieTmps") {
 								that.ThrillerMovieTmps = tmp;
 							}
+						}else{
+							result = JSON.parse(result);
+							if(result.code == 402){
+								that.expireLogin();
+							}
+							that.$layer.msg(result.message);
 						}
+						
 					}
 				})
 

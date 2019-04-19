@@ -45,3 +45,4 @@ style 中的 lang 指额外表示支持的语言可以让编辑器识别,scoped 
 
 # npm install 项目下载install
 # npm run build 项目部署 将生成的dist文件部署服务器
+# npm install -g cnpm --registry=https://registry.npm.taobao.org  安装淘宝镜像

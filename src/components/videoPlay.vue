@@ -143,25 +143,30 @@
 				let userId = this.userId;
 				let server = this.server;
 				let that = this;
+				let sessionToken = this.sessionToken;
 
 				$.ajax({
 					type: "post",
 					url: server + "/video/saveVideoComments",
+					beforeSend: function(XMLHttpRequest) {
+						XMLHttpRequest.setRequestHeader("Authorization",sessionToken);
+					}, 
 					data: {
 						"videoId": videoId,
 						"comments": commentValues,
 						"username": username,
 						"userId": userId,
-						"sessionToken": that.sessionToken,
 					},
 					success: function (result) {
-						if (result.success) {
+						if (result.code == 200) {
 							that.$options.methods.initComment(that); //刷新评论
 							$("#commentvalue").val("");
 						}else{
-							if(result.msg == "0002"){
+							result = JSON.parse(result);
+							if(result.code == 402){
 								that.expireLogin();
 							}
+							that.$layer.msg(result.message);
 						}
 					}
 				})
