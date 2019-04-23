@@ -15,6 +15,15 @@
 					<br>
 				</div>
 			</div>
+			<div class="row" style="height: 54.9px;">
+				<label class='col-md-2 col-md-offset-3' style="padding-right: 0;">验证码</label>
+				<div class="col-xs-2" style="padding:0;" >
+					<input type="text" id="kaptcha" name="kaptcha" class="form-control">
+				</div>
+				<div class="col-xs-2" style="padding:0;" v-on:click="getKaptcha()">
+					<img :src="kaptchaImg" class="kaptchaImgClass">
+				</div>
+			</div>
 			<div class="row">
 				<label class='col-md-2 col-md-offset-3' style="padding-right: 0;cursor:pointer;" v-on:click="returnindex">return VTime</label>
 				<button type="button" id="loginbut" class="btn btn-default col-xs-8 col-xs-offset-2 col-md-2 col-md-offset-0" @click="login">登入</button>
@@ -39,6 +48,8 @@
 				coverImgUrl: 'bk/timg.jpg',
 				baseImg: 'bk/girl.jpg',
 				clientWidths: '',
+				kaptchaImg:'',
+				kaptchaToken:'',
 			}
 		},
 		mounted() {
@@ -48,8 +59,34 @@
 		},
 		created() {
 			this.clientWidths = document.body.clientWidth;
+			//获取验证码图片
+			this.getKaptcha();
 		},
 		methods: {
+			getKaptcha: function(){
+				var that = this;
+				var server = this.server;
+				$.ajax({
+					type: "post",
+					url: server + "/video/kaptcha",
+					success: function (result,status,xhr) {
+						if (result.code == 200) {
+							var tmp = result.data;
+							that.kaptchaImg = tmp.img;
+						}else{
+							result = JSON.parse(result);
+							that.$layer.msg(result.message);
+						}
+						
+					},
+					complete: function(XMLHttpRequest,data){
+						if (data == "success") {
+							//验证码token
+							that.kaptchaToken = XMLHttpRequest.getResponseHeader('Authorization');
+						}
+					}
+				})
+			},
 			returnindex: function () {
 				this.$router.push({
 					name: 'index',
@@ -59,6 +96,7 @@
 				var routers = this.$router;
 				var username = $("#username").val();
 				var password = $("#password").val();
+				var kaptcha = $("#kaptcha").val();
 				var remFlag = $("#remember").is(":checked");
 				var server = this.server;
 				var layer = this.$layer;
@@ -68,13 +106,19 @@
 					this.$layer.msg("用户名为空");
 				} else if (password == "" || password == null) {
 					this.$layer.msg("密码为空");
-				} else {
+				} else if(kaptcha == "" || kaptcha == null){
+					this.$layer.msg("请填写验证码");
+				}else {
 					$.ajax({
 						type: 'post',
 						url: server + '/login',
+						beforeSend: function(XMLHttpRequest) {
+							XMLHttpRequest.setRequestHeader("Authorization",that.kaptchaToken);
+						},
 						data: {
 							'username': username,
 							'password': password,
+							'kaptcha': kaptcha,
 							'remenberme': 0,
 						},
 						success: function (data) {
@@ -127,5 +171,10 @@
 		font-family: serif;
 		font-variant: inherit;
 		color: #fff;
+	}
+	
+	.kaptchaImgClass{
+		height: 35px;
+		cursor: pointer;
 	}
 </style>
