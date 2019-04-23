@@ -369,7 +369,7 @@
 								$("#video-progress-width").css("width", 0 + '%');
 								if (result.code == 200) {
 									that.uploadVideoFileshow = true;
-									$("#uploadVideoPath").val(result.uploadFileName);
+									$("#uploadVideoPath").val(result.data.uploadFileName);
 								}else{
 									if(result.code == 402){
 										that.expireLogin();
@@ -380,7 +380,7 @@
 								$("#file-progress-width").css("width", 0 + '%');
 								if (result.code == 200) {
 									that.uploadFileshow = true;
-									$("#uploadFilePath").val(result.uploadFileName);
+									$("#uploadFilePath").val(result.data.uploadFileName);
 								}else{
 									if(result.code == 402){
 										that.expireLogin();
