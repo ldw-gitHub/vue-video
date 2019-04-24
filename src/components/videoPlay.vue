@@ -4,7 +4,7 @@
 			<!--头部的容器 里面加上组件 menus-->
 			<menus v-bind:username="username"></menus>
 		</div>
-		<div class="row col-md-10 col-md-offset-1" style="min-height: 800px;">
+		<div class="row col-md-10 col-md-offset-1" style="min-height: 800px;margin-top: 40px;">
 			<!-- content -->
 			<div class="row col-md-12" style="padding: 0;">
 				<div class="panel col-md-9" style="padding: 0;">

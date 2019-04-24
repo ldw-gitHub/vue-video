@@ -117,7 +117,7 @@
 						},
 						data: {
 							'username': username,
-							'password': password,
+							'password': that.$md5(password),
 							'kaptcha': kaptcha,
 							'remenberme': 0,
 						},

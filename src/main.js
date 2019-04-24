@@ -17,6 +17,9 @@ Vue.prototype.$layer = layer(Vue);
 
 Vue.config.productionTip = false // 关闭生产模式下给出的提示
 
+import md5 from 'js-md5';
+Vue.prototype.$md5 = md5;
+
 Vue.prototype.expireLogin = function () {
 	/* sessionStorage.removeItem('sessionToken');
 	localStorage.removeItem("sessionToken");
