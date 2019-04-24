@@ -179,20 +179,22 @@
 				let server = that.server;
 
 				$.ajax({
-					type: "get",
+					type: "post",
 					url: server + "/video/getVideoCommentsByid",
 					data: {
 						"videoId": videoId,
 					},
 					success: function (result) {
-						result = JSON.parse(result);
-						if (result.success) {
+						if (result.code == 200) {
 							var msgs = result.data;
 							let size = msgs.length;
 							for (let i = 0; i < size; i++) {
 								msgs[i].createtime = that.$options.methods.timestamp2Time(msgs[i].createtime + '', '-');
 							}
 							that.commentList = msgs;
+						}else{
+							result = JSON.parse(result);
+							that.$layer.msg(result.message);
 						}
 					}
 				})
@@ -211,24 +213,23 @@
 				var that = this;
 
 				$.ajax({
-					type: "get",
+					type: "post",
 					url: server + "/video/findVideosById",
 					data: {
 						"videoId": videoid,
 					},
 					success: function (result) {
-						result = JSON.parse(result);
-						if (result.success) {
-							var tmp = result.video;
+						if (result.code == 200) {
+							var tmp = result.data;
 							that.videoModel = tmp;
 							that.playerOptions.poster = ftpip + tmp.imgpath;
 							that.playerOptions.sources[0].src = ftpip + tmp.videopath;
-
+							
 							//搜索相关视频
 							var thisTitle = tmp.title;
 							var thisDescription = tmp.description;
 							$.ajax({
-								type: "get",
+								type: "post",
 								url: server + "/video/findRelateVideos",
 								data: {
 									"thisTitle": thisTitle,
@@ -236,12 +237,20 @@
 									"videoid":videoid,
 								},
 								success: function (result) {
-									result = JSON.parse(result);
-									if (result.success) {
-										that.relatedMovies = result.data;
+									if (result.code == 200) {
+									    that.relatedMovies = result.data;
+									}else{
+										result = JSON.parse(result);
+										if(result.code == 402){
+											that.expireLogin();
+										}
+										that.$layer.msg(result.message);
 									}
 								}
 							})
+						}else{
+							result = JSON.parse(result);
+							that.$layer.msg(result.message);
 						}
 					}
 				})
