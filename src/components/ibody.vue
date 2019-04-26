@@ -135,7 +135,7 @@
 				var that = this;
 				$.ajax({
 					type: "post",
-					url: server + "/video/indexFindVideosByType",
+					url: server + "/videos/indexFindVideosByType",
 					data: {
 						"videoType": type
 					},

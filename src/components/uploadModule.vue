@@ -195,7 +195,7 @@
 					return;
 				}
 				var formFile = new FormData();
-				formFile.append("action", server + "/zuul/video/uploadFile");
+				formFile.append("action", server + "/zuul/videos/uploadFile");
 				formFile.append("uploadfile", fileObj); //加入文件对象
 
 				this.fileSize = fileObj.size;
@@ -224,7 +224,7 @@
 				})
 				$("#chooceImg").val("正在上传图片...");
 				$.ajax({
-					url: server + "/zuul/video/uploadFile",
+					url: server + "/zuul/videos/uploadFile",
 					data: formFile,
 					type: "Post",
 					dataType: "json",
@@ -334,7 +334,7 @@
 			ajaxUploadLargeFile: function (count, formFile, totle, server, layer, that, fileArray, isShowUploadVideo) {
 				var percentComplete = Math.round((count * 100) / totle);
 				$.ajax({
-					url: server + "/zuul/video/uploadFile",
+					url: server + "/zuul/videos/uploadFile",
 					data: formFile,
 					type: "Post",
 					dataType: "json",
@@ -480,7 +480,7 @@
 				console.log(datas);
 				$.ajax({
 					type: "post",
-					url: server + "/video/saveFile",
+					url: server + "/videos/saveFile",
 					data: datas,
 					contentType: "application/x-www-form-urlencoded",
 					//contentType: "application/json;charset=utf-8",
@@ -531,7 +531,7 @@
 				
 				$.ajax({
 					type: "post",
-					url: server + "/video/saveMedia",
+					url: server + "/videos/saveMedia",
 					beforeSend: function(XMLHttpRequest) {
 						XMLHttpRequest.setRequestHeader("Authorization",sessionToken);
 					}, 
@@ -587,7 +587,7 @@
 				var sessionToken = that.sessionToken;
 				$.ajax({
 					type: "post",
-					url: server + '/video/deleteFile',
+					url: server + '/videos/deleteFile',
 					data: {
 						'attachName': attachName,
 						'tag': tag,

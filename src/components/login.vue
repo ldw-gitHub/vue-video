@@ -68,7 +68,7 @@
 				var server = this.server;
 				$.ajax({
 					type: "post",
-					url: server + "/video/kaptcha",
+					url: server + "/videos/kaptcha",
 					success: function (result,status,xhr) {
 						if (result.code == 200) {
 							var tmp = result.data;

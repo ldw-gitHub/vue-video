@@ -4,7 +4,7 @@
 			<!--头部的容器 里面加上组件 menus-->
 			<menus v-bind:username="username"></menus>
 		</div>
-		<div class="row col-md-10 col-md-offset-1" style="min-height: 800px;margin-top: 40px;">
+		<div class="row col-md-10 col-md-offset-1" style="min-height: 800px;margin-top: 30px;">
 			<!-- content -->
 			<div class="row col-md-12" style="padding: 0;">
 				<div class="panel col-md-9" style="padding: 0;">
@@ -147,7 +147,7 @@
 
 				$.ajax({
 					type: "post",
-					url: server + "/video/saveVideoComments",
+					url: server + "/videos/saveVideoComments",
 					beforeSend: function(XMLHttpRequest) {
 						XMLHttpRequest.setRequestHeader("Authorization",sessionToken);
 					}, 
@@ -180,7 +180,7 @@
 
 				$.ajax({
 					type: "post",
-					url: server + "/video/getVideoCommentsByid",
+					url: server + "/videos/getVideoCommentsByid",
 					data: {
 						"videoId": videoId,
 					},
@@ -214,7 +214,7 @@
 
 				$.ajax({
 					type: "post",
-					url: server + "/video/findVideosById",
+					url: server + "/videos/findVideosById",
 					data: {
 						"videoId": videoid,
 					},
@@ -230,7 +230,7 @@
 							var thisDescription = tmp.description;
 							$.ajax({
 								type: "post",
-								url: server + "/video/findRelateVideos",
+								url: server + "/videos/findRelateVideos",
 								data: {
 									"thisTitle": thisTitle,
 									"thisDescription": thisDescription,
