@@ -1,6 +1,6 @@
 <template>
 	<div class="container" style="width: 100%;">
-		<div class="row col-md-12 col-md-offset-0" style="height: 150px;">
+		<div class="row col-md-12 col-md-offset-0" style="height: 180px;">
 			<!--头部的容器 里面加上组件 menus-->
 			<menus v-bind:username="username"></menus>
 			<!-- <div class="col-xs-12 col-xs-offset-0 col-md-12 col-md-offset-0 titleImage"></div> -->

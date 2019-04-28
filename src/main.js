@@ -8,6 +8,7 @@ import uploader from 'vue-simple-uploader'
 import $ from 'jquery';
 import './assets/bootstrap/css/bootstrap.min.css';
 import './assets/bootstrap/js/bootstrap.min.js';
+import moment from 'moment'
 
 import global_ from './components/global' // 导入全局变量
 Vue.prototype.GLOBAL = global_
@@ -19,6 +20,15 @@ Vue.config.productionTip = false // 关闭生产模式下给出的提示
 
 import md5 from 'js-md5';
 Vue.prototype.$md5 = md5;
+
+//全局过滤器
+Vue.filter('dateFmt', (input, formatString = "YYYY-MM-DD") => {
+    //es5函数参数设置默认值
+    //const lastFormatString = formatString || ''
+     // moment(input) 把时间字符串转成时间对象
+     // format(formatString) 把时间对象，按照指定格式，格式化成符合条件的字符串
+    return moment(input).format(formatString)
+})
 
 Vue.prototype.expireLogin = function () {
 	/* sessionStorage.removeItem('sessionToken');

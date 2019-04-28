@@ -70,7 +70,7 @@
 			</div>
 
 		</div>
-		<div class="container"> 
+		<div class="container" style="height:70px;margin-top: 20px;"> 
 		   	<form class="navbar-form" role="search">
 		   		<div class="form-group col-md-offset-3 col-md-4 col-xs-offset-0 col-xs-8">
 		   			<input type="text" class="form-control searchclass" style="width: 100%;" placeholder="输入关键字">

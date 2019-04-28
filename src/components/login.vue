@@ -137,6 +137,7 @@
 						complete: function(xhr,data){
 							if (data == "success") {
 								//记住密码
+								//sessionStorage.setItem("sessionToken", xhr.getResponseHeader("Authorization"));
 								that.setCookie("sessionToken",xhr.getResponseHeader("Authorization"),1);
 								that.GLOBAL.sessionToken = data.accessToken;
 							}

@@ -1,6 +1,6 @@
 <template>
 	<div class="container" style="width: 100%;">
-		<div class="row col-md-10 col-md-offset-1" style="height: 80px;">
+		<div class="row col-md-10 col-md-offset-1" style="height: 150px;">
 			<!--头部的容器 里面加上组件 menus-->
 			<menus v-bind:username="username"></menus>
 		</div>
@@ -52,38 +52,34 @@
 				ftpIP: this.GLOBAL.ftpIP,
 				server: this.GLOBAL.server,
 				sessionToken: this.GLOBAL.sessionToken,
-				username: "",
-				userId: "",
 				myMoviesTmp: {},
 				total: 1, // 记录总条数
 				pageSize: 24, // 每页显示条数
 				current: 1, // 当前的页数
+				username: "",
 			}
 		},
 		created() {
+			this.username = this.getCookie("username");
 			this.initData();
 			this.pagechange(1);
 		},
 		methods: {
 			initData() {
-				this.username = this.getCookie("username");
-				this.userId = this.getCookie("userId");
 				this.sessionToken = this.getCookie("sessionToken");
 			},
 			pagechange: function (currentPage) {
-				let userId = this.userId;
 				let server = this.server;
 				var that = this;
                 var sessionToken = that.sessionToken;
 				
 				$.ajax({
 					type: 'post',
-					url: server + "/video/findMyOwnVideos",
+					url: server + "/videos/findMyOwnVideos",
 					beforeSend: function(XMLHttpRequest) {
 						XMLHttpRequest.setRequestHeader("Authorization",sessionToken);
 					}, 
 					data: {
-						"userId": userId,
 						"pageSize": that.pageSize,
 						"currentPage": currentPage,
 					},

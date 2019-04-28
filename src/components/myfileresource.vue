@@ -1,6 +1,6 @@
 <template>
 	<div class="container" style="width: 100%;">
-		<div class="row col-md-10 col-md-offset-1" style="height: 80px;">
+		<div class="row col-md-10 col-md-offset-1" style="height: 150px;">
 			<!--头部的容器 里面加上组件 menus-->
 			<menus v-bind:username="username"></menus>
 		</div>
@@ -78,11 +78,9 @@
 				this.sessionToken =  sessionStorage.getItem('sessionToken') ? sessionStorage.getItem('sessionToken') : localStorage.getItem(
 						'sessionToken'); */
 				this.username = this.getCookie("username");
-				this.userId = this.getCookie("userId");
 				this.sessionToken = this.getCookie("sessionToken");
 			},
 			pagechange: function (currentPage) {
-				let userId = this.userId;
 				let server = this.server;
 				var that = this;
 				var sessionToken = that.sessionToken;
@@ -98,7 +96,6 @@
 						XMLHttpRequest.setRequestHeader("Authorization",sessionToken);
 					}, 
 					data: {
-						"userId": userId,
 						"pageSize": that.pageSize,
 						"currentPage": currentPage,
 					},

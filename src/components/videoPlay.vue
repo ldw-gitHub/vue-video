@@ -57,7 +57,7 @@
 						<span class="comments">{{commentNumber.msg}}</span>
 					</div>
 					<div class="col-md-2">
-						<span class="comment_name">{{commentNumber.commentusername}} | {{commentNumber.createtime}}</span>
+						<span class="comment_name">{{commentNumber.commentusername}} | {{commentNumber.createtime | dateFmt('YYYY-MM-DD HH:mm:ss')}}</span>
 					</div>
 				</div>
 				<div class="row">
@@ -115,8 +115,7 @@
 			}
 		},
 		created() {
-			this.sessionToken =  sessionStorage.getItem('sessionToken') ? sessionStorage.getItem('sessionToken') : localStorage.getItem(
-					'sessionToken');
+			this.sessionToken = this.getCookie("sessionToken");
 			this.getRouterData();
 			this.getVideoById(this.videoId);
 			this.initComment(this);
@@ -125,10 +124,6 @@
 			commentClick: function () {
 				let commentValues = $("#commentvalue").val();
 
-				if (!sessionStorage.getItem('sessionToken') && !localStorage.getItem('sessionToken')) {
-					this.$layer.msg("登入后评论");
-					return;
-				}
 				if (commentValues.length <= 0 || commentValues == "") {
 					return;
 				}
@@ -139,8 +134,6 @@
 
 
 				let videoId = this.videoId;
-				let username = this.username;
-				let userId = this.userId;
 				let server = this.server;
 				let that = this;
 				let sessionToken = this.sessionToken;
@@ -148,14 +141,9 @@
 				$.ajax({
 					type: "post",
 					url: server + "/videos/saveVideoComments",
-					beforeSend: function(XMLHttpRequest) {
-						XMLHttpRequest.setRequestHeader("Authorization",sessionToken);
-					}, 
 					data: {
 						"videoId": videoId,
 						"comments": commentValues,
-						"username": username,
-						"userId": userId,
 					},
 					success: function (result) {
 						if (result.code == 200) {
@@ -187,10 +175,10 @@
 					success: function (result) {
 						if (result.code == 200) {
 							var msgs = result.data;
-							let size = msgs.length;
+							/* let size = msgs.length;
 							for (let i = 0; i < size; i++) {
 								msgs[i].createtime = that.$options.methods.timestamp2Time(msgs[i].createtime + '', '-');
-							}
+							} */
 							that.commentList = msgs;
 						}else{
 							result = JSON.parse(result);
@@ -258,10 +246,11 @@
 			timestamp2Time: function (timestamp, separator) {
 				var result = "";
 				if (timestamp) {
-					var reg = new RegExp(/\D/, "g"); //提取数字字符串
-					var timestamp_str = timestamp.replace(reg, "");
+					//var reg = new RegExp(/\D/, "g"); //提取数字字符串
+					//var timestamp_str = timestamp.replace(reg, "");
+					console.log(timestamp);
 					var d = new Date();
-					d.setTime(timestamp_str);
+					d.setTime(timestamp);
 					var year = d.getFullYear();
 					var month = d.getMonth() + 1;
 					var day = d.getDate();
