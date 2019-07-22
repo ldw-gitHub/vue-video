@@ -259,7 +259,7 @@
 						$("#chooceImg").removeAttr("disabled");
 						$("#chooceImg").val("选择图片");
 						
-						console.log(result.data.uploadFileName);
+						//console.log(result.data.uploadFileName);
 						if (result.code == 200) {
 							that.uploadImgFileshow = true;
 							$("#uploadImgPath").val(result.data.uploadFileName);

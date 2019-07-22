@@ -14,8 +14,9 @@
 				</div>
 				<div class="panel-body" style="width: 100%; padding-top: 5px;">
 					<div id="artMovie" class="col-md-12 movie_container">
-						<div v-for="(movie,index) in myMoviesTmp" :meta="movie" :key="index" v-on:click="getVideos(movie.id)" class="col-md-2 col-xs-12 moviesClass">
-							<a>
+						<div v-for="(movie,index) in myMoviesTmp" :meta="movie" :key="index"  class="col-md-2 col-xs-12 moviesClass">
+							<p class="deleteVideoClass" @click="myconfirmDelete(movie.id)">删除</p>
+							<a v-on:click="getVideos(movie.id)">
 								<img :src="ftpIP + movie.imgpath" class="imgClass">
 							</a>
 							<p class="movetitleClass">{{movie.title}}</p>
@@ -97,6 +98,30 @@
 					}
 				})
 			},
+			myconfirmDelete: function(videoId) {
+				if(confirm("确定删除") == true){
+					var server = this.server;
+					var layer = this.$layer;
+					var that = this;
+					var sessionToken = that.sessionToken;
+					
+					$.ajax({
+						type: "post",
+						url: server + '/videos/deleteVideo',
+						data: {
+							"videoId": videoId,
+						},
+						beforeSend: function(XMLHttpRequest) {
+							XMLHttpRequest.setRequestHeader("Authorization",sessionToken);
+						},
+						contentType: "application/x-www-form-urlencoded",
+						success: function (result) {
+							that.$layer.msg(result.message);
+						}
+					
+					});
+				}
+			},
 			getVideos: function (videoId) {
 				this.$router.push({
 					name: 'videoPlay',
@@ -142,6 +167,15 @@
 		BORDER-RIGHT-WIDTH: 0px;
 		width: 100%;
 		height: 73%;
+	}
+	
+	.deleteVideoClass{
+		cursor: pointer;
+		height: 16px;
+		width: 75%;
+		font-size: 12px;
+		font-weight: bold;
+		float: left;
 	}
 
 	.movetitleClass {
